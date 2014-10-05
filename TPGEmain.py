@@ -13,7 +13,7 @@ def printHelp():
 
 
 
-
+id = "WHSN"
 
 # Get the total number of args passed to the demo.py
 total = len(sys.argv)
@@ -35,5 +35,5 @@ if argSize  > 1:
 if runMode == "-H" or runMode == "-HELP":
 	printHelp()
 else:
-	TPGEgeneratePages()
+	TPGEgeneratePages(id)
 
