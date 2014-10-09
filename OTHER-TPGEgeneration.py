@@ -1,7 +1,7 @@
-from TPGExml import TPGEgetValueExtra
+
 from TPGExml import TPGEgetValue
 from TPGExml import XMLCombiner
-
+from TGPExml import TPGEgetValueExtra
 
 
 import xml.etree.ElementTree as ET
@@ -37,11 +37,12 @@ def TPGEgeneratePages(idString, baseDirectory, xmlAdd, extraXML):
 	#def TPGEgetValueExtra(lookupString, tree, testValue, returnValue)
 
 	lookupString = "oompTag.tagName"
+
 	testValue = "oompColor"
 	returnValue = "tagReadable"
 
-	value = TPGEgetValueExtra(lookupString, root, testValue, returnValue)
-	print("********************* VALUE ********* " + value)
+
+	TPGEgetValueExtra(lookupString, root, testValue, returnValue)
 
 
 
@@ -126,11 +127,6 @@ def TPGELoadXML(idString, baseDirectory, xmlAdd, extraXML):
 
 	xmlFiles = (moreXML)
 
-	print ("Loading XML FILES:  ")
-	for item in xmlFiles:
-		print "    " + item
-	print "---------"
-
 	r = XMLCombiner(xmlFiles).combine()
 	f = open(tempCombinedXMLFileName,'w+')
 	f.write(r)
@@ -138,3 +134,4 @@ def TPGELoadXML(idString, baseDirectory, xmlAdd, extraXML):
 
 
 
+TPGEgeneratePages("LEDS-10-L-FROS-01", "C:/GH/oomp-scripts/oomp-gen/parts/LEDS-10-L-FROS-01/", ".oomp", "tags/OOMP-oomlout-tags.xml,tags/oomp-Tag-Details-NEW.oomp")

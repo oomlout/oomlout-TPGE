@@ -37,6 +37,7 @@ def TPGEgeneratePages(idString, baseDirectory, xmlAdd, extraXML):
 	#def TPGEgetValueExtra(lookupString, tree, testValue, returnValue)
 
 	lookupString = "oompTag.tagName"
+
 	testValue = "oompColor"
 	returnValue = "tagReadable"
 
@@ -138,3 +139,4 @@ def TPGELoadXML(idString, baseDirectory, xmlAdd, extraXML):
 
 
 
+TPGEgeneratePages("LEDS-10-L-FROS-01", "C:/GH/oomp-scripts/oomp-gen/parts/LEDS-10-L-FROS-01/", ".oomp", "tags/OOMP-oomlout-tags.xml,tags/oomp-Tag-Details-NEW.oomp")
