@@ -1,4 +1,3 @@
-
 import xml.etree.ElementTree as ET
 
 xmlFileName = "tags/TPGE-oomlout-tags.xml"
@@ -11,87 +10,87 @@ def TPGEgetValue(lookupString, tree):
 		try:
 			value = tree.find(tag).text
 		except AttributeError:
-			print "TAG NOT FOUND " + tag
 			value = ""
 		try:
 			tree = tree.find(tag)
 		except AttributeError:
-			print "TAG NOT FOUND 2  " + tag
 			value = ""
 
 	if value is None:
+		print "    TAG NOT FOUND  " + lookupString
 		value = ""
 
 	return value
 
 def TPGEgetValueExtra(lookupString, tree, testValue, returnValue):
+
+
 	xmlLookup = lookupString.split(".")
 	for tag in xmlLookup:
 		try:
-			value = tree.find(tag).text
+			#try and find the text if not found try and go down one step
+			value = tree.findall(tag)
 		except AttributeError:
-			print "TAG NOT FOUND " + tag
 			value = ""
 		try:
-			tree = tree.find(tag)
+			#text not found go down on step of the tree and try again
+			tree = tree.findall(tag)
 		except AttributeError:
-			print "TAG NOT FOUND 2  " + tag
 			value = ""
 
 	#TEST for a none return value (tag exists but has no value)
 	if value is None:
+		print "    TAG NOT FOUND  " + lookupString
 		value = ""
 
 	return value
 
+##
+## Returns the Element where testfield = ID
+##	Add full stop to go down a level ie. oompPart.oompID
+def TPGEgetElementWhere(id, tree, testField):
+	returnValue = ""
+
+	xmlLookup = testField.split(".")
+	running = True
+	print len(xmlLookup)
+	for x in range(0,len(xmlLookup)-1):
+			try:
+				#try and find the text if not found try and go down one step
+				value = tree.findall(xmlLookup[x])
+			except AttributeError:
+				print "     XML TAG NOT FOUND " + testField + "  --  " + xmlLookup[x]
+				value = ""
+	for item in value:
+		testValue = item.find(xmlLookup[len(xmlLookup)-1])
+		if testValue.text == id:
+			print "MATCH FOUND"
+			returnValue = item
+
+	return returnValue
+
+##
+## Get a list of all files with a filename iterating through the directory structure
+##
+def TPGEgetAllFilesIterate(directory, extension):
+	returnValue = []
+
+	import os
+	for root, dirs, files in os.walk(directory):
+		for file in files:
+			if file.endswith(extension):
+				returnValue.append(root + "\\" + file)
 
 
-from xml.etree import ElementTree as et
+	return returnValue
 
-class XMLCombiner(object):
-    def __init__(self, filenames):
-        assert len(filenames) > 0, 'No filenames!'
-        # save all the roots, in order, to be processed later
-        self.roots = [et.parse(f).getroot() for f in filenames]
+##
+## Returns resultField where testField = id in tree
+##
+def TPGEgetValueWhere(id, tree, testField, resultField):
 
-    def combine(self):
-        for r in self.roots[1:]:
-            # combine each element with the first one, and update that
-            self.combine_element(self.roots[0], r)
-        # return the string representation
-        return et.tostring(self.roots[0])
-
-    def combine_element(self, one, other):
-        """
-        This function recursively updates either the text or the children
-        of an element if another element is found in `one`, or adds it
-        from `other` if not found.
-        """
-        # Create a mapping from tag name to element, as that's what we are fltering with
-        mapping = {el.tag: el for el in one}
-        for el in other:
-            if len(el) == 0:
-                # Not nested
-                try:
-                    # Update the text
-                    mapping[el.tag].text = el.text
-                except KeyError:
-                    # An element with this name is not in the mapping
-                    mapping[el.tag] = el
-                    # Add it
-                    one.append(el)
-            else:
-                try:
-                    # Recursively process the element, and update it in the same way
-                    self.combine_element(mapping[el.tag], el)
-                except KeyError:
-                    # Not in the mapping
-                    mapping[el.tag] = el
-                    # Just add it
-                    one.append(el)
-
-
-
+	result = TPGEgetElementWhere(id, tree, testField)
+	return TPGEgetValue(resultField, result)
 
 
 

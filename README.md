@@ -16,6 +16,7 @@ extraXML 		--  Extra xmlFile to load (need to upgrade to be a list)
 
 '## -- Marks line as a comment
 '%% -- Replace with program variable (ie. ID)
+'&& -- Simple Tag but processd first (NOTE: could replace with @1 etc.)
 '@@ -- Simple Tag
 '!! -- Complex tag format !!oompTag.tagName=VALUE=oompTag.tagType!! (returns tagType for the tag where tagName = VALUE
 
@@ -35,3 +36,10 @@ extraXML 		--  Extra xmlFile to load (need to upgrade to be a list)
 'TPGEmain.py		-- The main command line program
 'TPGEgeneration.py	-- Used for generating files
 'TPGExml.py			-- XML support routines
+
+
+# Process
+
+TPGELoadXML(idString, baseDirectory, xmlAdd, extraXML)
+	
+	

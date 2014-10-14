@@ -61,7 +61,7 @@
 									<table>
 										<tr >
 											<td height="100px" width="280px" class="oompReverseColors">
-												<span class="oompDescText"><center>@@oompPart.name@@</center></span>
+												<span class="oompDescText"><center>@@oompPart.oompID,name@@</center></span>
 											</td>
 										</tr>
 									</table>
@@ -70,9 +70,9 @@
 							<tr>
 								<td><!-- label table starts here -->
 									<table>
-**oompPart.oompColor**@@oompPart.oompColor@@<br>
-**oompPart.ooPitch**@@oompPart.ooPitch@@<br>
-**oompPart.ooDepth**@@oompPart.ooDepth@@<br>
+**%%ID%%,oompPart.oompColor**@@%%ID%%,oompPart.oompID,oompColor@@<br>
+**%%ID%%,oompPart.ooPitch**@@@@%%ID%%,oompPart.oompID,ooPitch@@<br>
+**%%ID%%,oompPart.ooDepth**@@oompPart.ooDepth@@<br>
 !!oompTag.tagName=oompColor=tagReadable!!
 									</table>
 									<!-- end of label table-->

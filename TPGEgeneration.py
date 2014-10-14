@@ -1,8 +1,9 @@
 from TPGExml import TPGEgetValueExtra
 from TPGExml import TPGEgetValue
-from TPGExml import XMLCombiner
-
-
+from TPGExml import TPGEgetValueWhere
+import sys
+import time
+from TPGExml import TPGEgetAllFilesIterate
 
 import xml.etree.ElementTree as ET
 import os.path
@@ -26,12 +27,10 @@ def find_between( s, first, last ):
 
 # Main Routine
 def TPGEgeneratePages(idString, baseDirectory, xmlAdd, extraXML):
-
 	print ("  TPGE -- Generating Pages")
 
-	TPGELoadXML(idString, baseDirectory, xmlAdd, extraXML)
-	tree = ET.parse(tempCombinedXMLFileName)
-	root = tree.getroot()
+	root = TPGELoadXML(idString, baseDirectory, xmlAdd, extraXML)
+
 
 
 	#def TPGEgetValueExtra(lookupString, tree, testValue, returnValue)
@@ -55,8 +54,10 @@ def TPGEgeneratePages(idString, baseDirectory, xmlAdd, extraXML):
 			templateFileName = TPGEgetValue("basics.template", root)
 			templateFile = open("template/" + templateFileName,"r")
 		except IOError:
-			templateFile = open("template/OOMP-template.tmpl","r")
+			templateFileName = "template/TEST-template.tmpl"
+			templateFile = open("template/TEST-template.tmpl","r")
 
+	print "Using Template:  " + templateFileName
 
 	outputFileName = TPGEgetValue("basics.output", root)
 	if outputFileName == "":
@@ -79,7 +80,12 @@ def TPGEgeneratePages(idString, baseDirectory, xmlAdd, extraXML):
 			while find_between(line, "@@", "@@") != "":
 				#find first tag
 				tag = find_between(line, "@@", "@@")
-				value = TPGEgetValue(tag, root)
+				details = tag.split(",")
+				#TPGEgetValueWhere(id, tree, testField, resultField)
+				#TPGEgetValueWhere("BOLT-M3-M-12-01", root, "oompPart.oompID", "name")
+				#@@oompPart.oompID,name@@
+
+				value = TPGEgetValueWhere(details[0], root, details[1], details[2])
 
 				print "Replacing Tag " + tag + "   " + value[0:20]
 				line = line.replace("@@" + tag + "@@", value)
@@ -102,6 +108,7 @@ def TPGEgeneratePages(idString, baseDirectory, xmlAdd, extraXML):
 		elif line[:1] == "*":
 			#Test for tag existance id directory based
 			testTag = find_between(line, "**", "**")
+
 			value = TPGEgetValue(testTag, root)
 			if value <> "":
 				line = line.replace("**" + testTag + "**", "")
@@ -118,23 +125,46 @@ def TPGEgeneratePages(idString, baseDirectory, xmlAdd, extraXML):
 
 
 def TPGELoadXML(idString, baseDirectory, xmlAdd, extraXML):
-	xmlFileName = "tags/TPGE-oomlout-tags.xml"
-	xmlIDFile = baseDirectory + "/" + idString + xmlAdd
-	moreXML = extraXML.split(",")
-	moreXML.append(xmlFileName)
-	moreXML.append(xmlIDFile)
 
-	xmlFiles = (moreXML)
+	xmlFileName = TPGEgetAllFilesIterate("tags/", ".xml")
+
+	fileList = extraXML.split(",")
+
+	moreXML = []
+
+	for item in fileList:
+		if os.path.isdir(item):
+			moreXML = moreXML + TPGEgetAllFilesIterate(item, xmlAdd)
+			moreXML = moreXML + TPGEgetAllFilesIterate(item, ".xml")
+		else:
+			moreXML.append(item)
+	moreXML = moreXML + xmlFileName
+
+	return TPGELoadXMLList(moreXML)
+
+
+
+def TPGELoadXMLList(list):
+	xmlFiles = list
+	f = open(tempCombinedXMLFileName,'w+')
+	f.write("<xml>")
 
 	print ("Loading XML FILES:  ")
-	for item in xmlFiles:
-		print "    " + item
 	print "---------"
-
-	r = XMLCombiner(xmlFiles).combine()
-	f = open(tempCombinedXMLFileName,'w+')
-	f.write(r)
+	for item in xmlFiles:
+		#print "Loading File    " + item
+		for line in open(item):
+			if ("<xml>" in line) or ("</xml>" in line):
+				t = 0
+		#		sys.stdout.write("S")
+			else:
+				f.write(line)
+		#		sys.stdout.write(".")
+		#print ""
+	f.write("</xml>")
 	f.close()
+	tree = ET.parse(tempCombinedXMLFileName)
+	return tree.getroot()
 
 
 
