@@ -17,7 +17,7 @@ def TPGEgetValue(lookupString, tree):
 			value = ""
 
 	if value is None:
-		print "    TAG NOT FOUND  " + lookupString
+		#print "    TAG NOT FOUND  " + lookupString
 		value = ""
 
 	return value
@@ -40,7 +40,7 @@ def TPGEgetValueExtra(lookupString, tree, testValue, returnValue):
 
 	#TEST for a none return value (tag exists but has no value)
 	if value is None:
-		print "    TAG NOT FOUND  " + lookupString
+		#print "    TAG NOT FOUND  " + lookupString
 		value = ""
 
 	return value
@@ -53,18 +53,18 @@ def TPGEgetElementWhere(id, tree, testField):
 
 	xmlLookup = testField.split(".")
 	running = True
-	print len(xmlLookup)
+	#print len(xmlLookup)
 	for x in range(0,len(xmlLookup)-1):
 			try:
 				#try and find the text if not found try and go down one step
 				value = tree.findall(xmlLookup[x])
 			except AttributeError:
-				print "     XML TAG NOT FOUND " + testField + "  --  " + xmlLookup[x]
+				#print "     XML TAG NOT FOUND " + testField + "  --  " + xmlLookup[x]
 				value = ""
 	for item in value:
 		testValue = item.find(xmlLookup[len(xmlLookup)-1])
 		if testValue.text == id:
-			print "MATCH FOUND"
+			#print "MATCH FOUND"
 			returnValue = item
 
 	return returnValue
@@ -90,6 +90,38 @@ def TPGEgetAllFilesIterate(directory, extension):
 def TPGEgetValueWhere(id, tree, testField, resultField):
 
 	result = TPGEgetElementWhere(id, tree, testField)
+	return TPGEgetValue(resultField, result)
+
+
+##
+## Returns the Element where index = index
+##	Add full stop to go down a level ie. oompPart.oompID
+def TPGEgetElementIndex(index, tree, testField):
+	returnValue = ""
+
+	xmlLookup = testField.split(".")
+	running = True
+	for x in range(0,len(xmlLookup)-1):
+			try:
+				#try and find the text if not found try and go down one step
+				value = tree.findall(xmlLookup[x])
+			except AttributeError:
+				#print "     XML TAG NOT FOUND " + testField + "  --  " + xmlLookup[x]
+				value = ""
+	try:
+		returnValue = value[int(index)]
+	except IndexError:
+		returnValue = ""
+
+
+	return returnValue
+
+##
+## Returns resultField for index item in testField
+##
+def TPGEgetValueIndex(index, tree, testField, resultField):
+
+	result = TPGEgetElementIndex(index, tree, testField)
 	return TPGEgetValue(resultField, result)
 
 
