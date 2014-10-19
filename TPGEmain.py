@@ -7,67 +7,83 @@ from TPGEgeneration import TPGEgeneratePages
 from TPGEgeneration import TPGEcreateXML
 from TPGEgeneration import TPGEgenerateDirectory
 
-#Print the help string
-def printHelp():
-	print ('OOMLOUT-TPGE -- Webpage Generation Using XML and Templates')
 
-# Get the arguments list
-argSize = len(sys.argv)
 
-print ('Running Generation:   ' + ', '.join(sys.argv))
+import argparse
+
+parser = argparse.ArgumentParser(description='OOMLOUT-TPGE -- Webpage Generation Using XML and Templates')
+parser.add_argument('-rm','--runMode', help='Sets the runmode for special circumstances (A -- Generate All)', required=False)
+parser.add_argument('-bd','--baseDirectory', help='Base directory to be working from', required=False)
+
+parser.add_argument('-of','--outputFile', help='Name of output file for single generation, name of directory for multiple output, can include %%ID%% to be replaced', required=False)
+parser.add_argument('-xa','--xmlAddition', help='File extension for supplied xml files (default ".xml")', required=False)
+parser.add_argument('-ex','--extraXML', help='List of files or directories (searched recursively) to include in the made xml file', required=False)
+parser.add_argument('-id','--idString', help='The ID String to be used in generating files', required=False)
+parser.add_argument('-tm','--template', help='The template', required=False)
+
+
+args = vars(parser.parse_args())
+
+#loading variables from comman line
+
+
+
+
+
 
 runMode = ""
-idString= ""
+if args['runMode'] <> None:
+	runMode = args['runMode']
+
+idString= "%%ID%%"
+if args['idString'] <> None:
+	idString = args['idString']
+	idString = idString.replace("%%ID%%", idString)
+
+
 baseDirectory=""
-xmlAdd = "-XML.xml"
+if args['baseDirectory'] <> None:
+	baseDirectory = args['baseDirectory']
+	baseDirectory = baseDirectory.replace("%%ID%%", idString)
+
+if args['outputFile'] <> None:
+	outputFile = args['outputFile']
+	outputFile = outputFile.replace("%%ID%%", idString)
+
+xmlAdd = ".xml"
+if args['xmlAddition'] <> None:
+	xmlAdd = args['xmlAddition']
+	xmlAdd = xmlAdd.replace("%%ID%%", idString)
+
 extraXML = ""
+if args['extraXML'] <> None:
+	extraXML = args['extraXML']
+	extraXML = extraXML.replace("%%ID%%", idString)
 
-for t in sys.argv:
-	print(t)
-
-if argSize  > 1:
-	runMode = str(sys.argv[1]).upper()
-	idString = str(sys.argv[1]).upper()
-if argSize  > 2:
-
-	working = str(sys.argv[2])
-	working = working.replace("%ID%", idString)
-	baseDirectory = working
-if argSize  > 3:
-	working = str(sys.argv[3])
-	working = working.replace("%ID%", idString)
-	xmlAdd = working
-if argSize  > 3:
-	working = str(sys.argv[4])
-	working = working.replace("%ID%", idString)
-	extraXML = working
-if argSize  > 4:
-	working = str(sys.argv[5])
-	working = working.replace("%ID%", idString)
-	template = working
-if argSize  > 5:
-	working = str(sys.argv[6])
-	working = working.replace("%ID%", idString)
-	output = working
+template= "template/TEST-template.tmpl"
+if args['template'] <> None:
+	template = args['template']
+	template = template.replace("%%ID%%", idString)
 
 
-def TPGEgenerateAllPages(baseDirectory):
-	TPGEgenerateDirectory(baseDirectory)
+print runMode
+
+def TPGEgenerateAllPages(baseDirectory, xmlAdd, template, outputFile, extraXML):
+	TPGEgenerateDirectory(extraXML)
 	print "Generating All OOMP Files:"
-	TPGEcreateXML("", baseDirectory, ".oomp", baseDirectory)
+	TPGEcreateXML("", baseDirectory, xmlAdd, baseDirectory)
 
 	for x in os.walk(baseDirectory):
 		idString = str(x[0].replace(baseDirectory, ""))
 		print "     Generating ---> " + idString
+		outputFile2 = outputFile.replace("%%ID%%", idString)
 		if idString <> "" :
-			TPGEgeneratePages(idString, baseDirectory + idString + "/", ".oomp", baseDirectory, "template/OOMP-template.tmpl", idString + ".html")
+			TPGEgeneratePages(idString, baseDirectory + idString + "/", xmlAdd, baseDirectory, template, outputFile2)
 
 
-if runMode == "-H" or runMode == "-HELP":
-	printHelp()
-elif runMode == "-A" or runMode == "-ALL":
-	TPGEgenerateAllPages(baseDirectory)
+if runMode == "A" or runMode == "ALL":
+	TPGEgenerateAllPages(baseDirectory, xmlAdd, template, outputFile, extraXML)
 else:
 	print ("Generating Pages: idString = " + idString + "  baseDirectory = " + baseDirectory + "  Template: " + template)
 	TPGEcreateXML(idString, baseDirectory, xmlAdd, extraXML)
-	TPGEgeneratePages(idString, baseDirectory, xmlAdd, extraXML, template, output)
+	TPGEgeneratePages(idString, baseDirectory, xmlAdd, extraXML, template, outputFile)

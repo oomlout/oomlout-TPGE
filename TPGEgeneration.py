@@ -12,7 +12,8 @@ import os.path
 
 templateFileName = "template/PROJ-template.tmpl"
 
-tempCombinedXMLFileName = "tmp/tempCombinedXML.xml"
+tempPath = "tmp/"
+tempCombinedXMLFileName = tempPath+"tempCombinedXML.xml"
 
 
 
@@ -33,19 +34,6 @@ def TPGEgeneratePages(idString, baseDirectory, xmlAdd, extraXML,template,output)
 
 	root = TPGEloadXML()
 
-
-
-	#def TPGEgetValueExtra(lookupString, tree, testValue, returnValue)
-
-	lookupString = "oompTag.tagName"
-	testValue = "oompColor"
-	returnValue = "tagReadable"
-
-	value = TPGEgetValueExtra(lookupString, root, testValue, returnValue)
-	print("********************* VALUE ********* " + value)
-
-
-
 	#getting template name trying in ID directory
 	##Need to ad a for each
 	templateFileName = template
@@ -59,8 +47,7 @@ def TPGEgeneratePages(idString, baseDirectory, xmlAdd, extraXML,template,output)
 
 	outputFileName = output
 
-	print "Outputing File:  " + baseDirectory + outputFileName
-	outputFile = open(baseDirectory + outputFileName, "w+")
+	outputFile = open(outputFileName, "w+")
 
 
 	#replaceTags
@@ -108,16 +95,21 @@ def TPGEreplaceLine(idString, line, root, baseDirectory):
 		else:
 		######HANDLE LOOPING
 		###^^0,12,%%U%%^^
-			if line[:1] == "^":
+			if find_between(line, "^^", "^^") != "":
 				tag = find_between(line, "^^", "^^")
 				details = tag.split(",")
-				line2 = line.replace("^^" + tag + "^^", "",1)		#remove looping tag
+				splitString  = line.rpartition("^^" + tag + "^^")
+				line2 = splitString[2]
+				#print "RESULTING STRING " + line2
+				sys.stdout.write('.')
+				#line2 = line.replace("^^" + tag + "^^", "",1)		#remove looping tag
 				line = ""   #reset line to nil
 				for b in range(int(details[0]),int(details[1])+1):
 					line3 = line2.replace(details[2],str(b))
 					result = TPGEreplaceLine(idString,line3,root, baseDirectory)
 					if result <> "":
 						line = line + result
+				line = splitString[0] + line #Re add front bit
 
 			####### COMPLEX TAGS WITH INDEX
 			while find_between(line, "!!", "!!") != "":
@@ -152,7 +144,7 @@ def TPGEreplaceLine(idString, line, root, baseDirectory):
 				#print "Replacing Tag " + tag + "   " + value[0:20]
 				line = line.replace("@@" + tag + "@@", value,1)
 
-
+	includeLine = True
 	##AFTER REPLACMENT TEST FOR INCLUSION
 	if line[:1] == "#":
 		#skip line as template comment
@@ -164,7 +156,8 @@ def TPGEreplaceLine(idString, line, root, baseDirectory):
 		line = line.replace("$$" + testFile + "$$", "")
 		#print "Testing File: " + baseDirectory + testFile
 		if os.path.isfile(baseDirectory + testFile):
-			includeLine = True
+			#includeLine = True
+			f=0
 		else:
 			#print"Skipping Line   FILE DOESN'T EXIST    " + line[0:20]
 			includeLine = False
@@ -186,10 +179,44 @@ def TPGEreplaceLine(idString, line, root, baseDirectory):
 		line = line.replace("**" + tag + "**", "",1)
 		if value <> "":
 			line = line.replace("**" + tag + "**", "")
-			includeLine = True
+			#includeLine = True
 		else:
 			#print"      Skipping Line   TAG DOESN'T EXIST    " + line[0:20]
 			includeLine = False
+	elif line[:1] == "=":
+		#Test for tag existance
+		#find first tag
+		tag = find_between(line, "==", "==")
+		details = tag.split(",")
+		#TPGEgetValueWhere(id, tree, testField, resultField)
+		#TPGEgetValueWhere("BOLT-M3-M-12-01", root, "oompPart.oompID", "name")
+		#@@oompPart.oompID,name@@
+		#print tag
+		try:
+			value = TPGEgetValueIndex(details[0], root, details[1], details[2])
+		except IndexError:
+			print "ERROR IN LINE: " + tag + "LINE: " + line
+			raise IndexError
+		#print "Replacing Tag " + tag + "   " + value[0:20]
+		line = line.replace("==" + tag + "==", "",1)
+		if value <> "":
+			line = line.replace("==" + tag + "==", "")
+			#includeLine = True
+		else:
+			#print"      Skipping Line   TAG DOESN'T EXIST    " + line[0:20]
+			includeLine = False			
+	elif find_between(line, "++", "++") != "":
+		while find_between(line, "++", "++") != "":
+				#find first tag
+				tag = find_between(line, "++", "++")
+				details = tag.split(",")
+				#TPGEgetValueWhere(id, tree, testField, resultField)
+				#TPGEgetValueWhere("BOLT-M3-M-12-01", root, "oompPart.oompID", "name")
+				#@@oompPart.oompID,name@@
+				#print "Testing Equal: " +details[0] + "  " + details[1]
+				if details[0] != details[1]:
+					includeLine=False
+				line = line.replace("++" + tag + "++", "")	
 	else:
 		r=7
 	if includeLine:
@@ -208,14 +235,18 @@ def TPGEreplaceLine(idString, line, root, baseDirectory):
 
 def TPGEcreateXMLList(list):
 	xmlFiles = list
+	
+	try:
+		os.stat(tempPath)
+	except:
+		os.mkdir(tempPath)
+	
 	f = open(tempCombinedXMLFileName,'w+')
 	f.write("<xml>")
 
-	print ("Loading XML FILES:  ")
 	print "---------"
 	for item in xmlFiles:
 		if item <> "":
-			print "Loading File    " + item
 			for line in open(item):
 				if ("<xml>" in line) or ("</xml>" in line):
 					t = 0
@@ -236,9 +267,9 @@ def TPGEcreateXML(idString, baseDirectory, xmlAdd, extraXML):
 	moreXML = []
 
 	for item in fileList:
+		print "Loading XML Files From: " + item
 		if os.path.isdir(item):
 			moreXML = moreXML + TPGEgetAllFilesIterate(item, xmlAdd)
-			moreXML = moreXML + TPGEgetAllFilesIterate(item, ".xml")
 		else:
 			moreXML.append(item)
 	moreXML = moreXML + xmlFileName

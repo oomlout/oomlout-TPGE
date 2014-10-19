@@ -1,0 +1,22 @@
+;##  TPGE NOTES  ##
+;##################
+
+
+
+
+;###### BAT FILE STRINGS
+
+Create all oomp files
+python TPGEmain.py -rm A -bd C:\KB\oomp-scripts\oomp-gen\parts\ -xa .oomp -ex C:\KB\oomp-scripts\oomp-gen\parts\ -tm template/OOMP-template.tmpl -of C:\KB\oomp-scripts\oomp-gen\parts\%%ID%%\%%ID%%.html
+
+CREATE Single File
+python TPGEmain.py -id CRHO-I01-B-06PI-01 -bd C:\KB\oomp-scripts\oomp-gen\parts\%%ID%%\ -xa .oomp -ex C:\KB\oomp-scripts\oomp-gen\parts\ -tm template/OOMP-template.tmpl -of C:\KB\oomp-scripts\oomp-gen\parts\%%ID%%\%%ID%%.html
+
+CREATE All Parts File
+python TPGEmain.py -bd C:\KB\oomp-scripts\oomp-gen\parts\ -xa .oomp -ex C:\KB\oomp-scripts\oomp-gen\parts\ -tm template/OOMP-allParts.tmpl -of C:\KB\oomp-scripts\oomp-gen\parts/allParts.html
+
+
+
+Create project file
+python TPGEmain.py WHSN c:/GH/oomlout-WHSN/ 
+

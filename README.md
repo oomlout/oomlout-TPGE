@@ -1,52 +1,56 @@
-oomlout-TPGE
-============
+# oomlout-TPGE
+A command line python tool used for generating pages from template files, being fed by xml
 
-TPGE -- Generating pages from template files in python
+## Command Line Parametwers
 
-#COMMAND LINE
+*-id				-- id String
+*-bd				-- baseDirectory
+*-xo				-- xmlOutut - name of output file with directory
+*-xa				-- xmlAddition extension for your xml files (default .xml)
+*-ex				-- extraXml list of directories or files to harvest xml data from
+*-rm				-- runMode for doing special things (A,ALL generate all)
+*-tm 			-- template name
 
 
--A or -ALL		Generate all OOMP Pages
-
-TPGEmain.py IDstring baseDirectory xmlAddition extra xml
-
-IDSTring		--	The ID of the part being dealt with
-baseDirectory	--	BaseDirectory
-xmlAddition		--	The XML info file in baseDirectory/IDString-xmlAddition
-extraXML 		--  Extra xmlFile to load (need to upgrade to be a list) 
-
-# Tag Types
+## Tag Types
 
 ((In order of execution))
 
-'## -- Marks line as a comment
-'%% -- Replace with program variable (ie. ID)
-^^0,12,%%U%%^^ -- Process the following line for a range 0 to 12 replacing %%U%% with the variable
+### Control Tags
 
-'!! -- Complex tag format index			@@INDEX,tag to match,name of tag to return@@		!!1,oompPart.oompID,name!! -- Returns first name of first oompPart
-'@1-@9 Priority tag processing 1 first 9 last same as below
-'@@ -- Complex tag format 				@@ID,tag to match,name of tag to return@@		@@%%ID%%,oompPart.oompID,name@@
+|Tag Marker			|	Description																			|	Example	
+|-------------------|---------------------------------------------------------------------------------------|-------------------------------|
+|## 				|	Marks line as a comment																|	##A Comment		
+|%% 				|	Replace with program variable (ie. ID)												|	%%ID%%	(currently only ID supported, plans to add date etc.)
+|^^				 	|	Process the following line for a range 0 to 12 replacing %%U%% with the variable	|	^^0,12,%%U%%^^  (loop from 0 to 12, replacing the tag %%U%% in the current line, can be used recursively but some care is needed. Everything to the right of this loop tag is processed with it)
+
+### Replacing Tags Based On XML
+
+|Tag Marker			|	Description																			|	Example	
+|-------------------|---------------------------------------------------------------------------------------|-------------------------------|
+|!!					| Complex tag format index																|	!!1,oompPart.oompID,name!! -- Returns first name of first oompPart
+|@1-@9				| Priority tag processing 1 first 9 last same as below									|
+|@@ 				| Complex tag format																	|	@@ID,tag to match,name of tag to return@@		@@%%ID%%,oompPart.oompID,name@@
+
+### Inclusion Test Tags
+
+--NO spaces between these important first charachter (the case for some but not others)
+|Tag Marker			|	Description																			|	Example	
+|-------------------|---------------------------------------------------------------------------------------|-------------------------------|
+|$$ 				| Test for file existing if it does process line file between %%FILENAME%% referenced on base directory | $$%%ID%%.jpg	|
+|** 				| Test if a tag value exists															|	**ID,tag to match,name of tag to return** (TEST value for  @@ above TODO-make a wrapper to use @@)
+|== 				| Test if a tag exists (index linked)													|	==1,oompPart.oompID,name== (TEST value for  !! above TODO-make a wrapper to use !!)
+|++ 				| Include if two values are the same													|	++CRHO,CRHO++ ++@@%%ID%%,oompPart.oompID,hexID@@,AEA++	
+
+### Special Types
+
+	To Implement
+	-Test if in family-
+	-Unique item within family
 
 
-# Filter Types
-		--NO spaces between these important first charachter
-'$$ -- Test for file existing if it does process line file between %%FILENAME%% referenced on base directory
-'** -- Test if a tag value exists
-
-# XML Files to load
-
-'BASE FILE --- /tags/
-
-
-# File Descriptions
+## File Descriptions
 
 'TPGEmain.py		-- The main command line program
 'TPGEgeneration.py	-- Used for generating files
 'TPGExml.py			-- XML support routines
-
-
-# Process
-
-TPGELoadXML(idString, baseDirectory, xmlAdd, extraXML)
-	
-	
