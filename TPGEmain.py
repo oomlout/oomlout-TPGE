@@ -5,7 +5,6 @@ import time
 
 from TPGEgeneration import TPGEgeneratePages
 from TPGEgeneration import TPGEcreateXML
-from TPGEgeneration import TPGEgenerateDirectory
 
 
 
@@ -69,7 +68,6 @@ if args['template'] <> None:
 print runMode
 
 def TPGEgenerateAllPages(baseDirectory, xmlAdd, template, outputFile, extraXML):
-	TPGEgenerateDirectory(extraXML)
 	print "Generating All OOMP Files:"
 	TPGEcreateXML("", baseDirectory, xmlAdd, baseDirectory)
 

@@ -58,19 +58,6 @@ def TPGEgeneratePages(idString, baseDirectory, xmlAdd, extraXML,template,output)
 	outputFile.close()
 
 
-def TPGEgenerateDirectory(baseDirectory):
-	outputFile = open(baseDirectory + "Main_Page.html", "w+")
-	outputFile.write("<html>")
-
-
-	for x in os.walk(baseDirectory):
-		idString = str(x[0].replace(baseDirectory, ""))
-		if idString <> "" :
-			line = '<a href="' + idString + '">' + idString + '</a><br>\n'
-			outputFile.write(line)
-
-	outputFile.write("</html>")
-	outputFile.close()
 
 
 def TPGEreplaceLine(idString, line, root, baseDirectory):
@@ -97,19 +84,33 @@ def TPGEreplaceLine(idString, line, root, baseDirectory):
 		###^^0,12,%%U%%^^
 			if find_between(line, "^^", "^^") != "":
 				tag = find_between(line, "^^", "^^")
+				print "Loop Tag Found: " + tag
 				details = tag.split(",")
-				splitString  = line.rpartition("^^" + tag + "^^")
-				line2 = splitString[2]
-				#print "RESULTING STRING " + line2
-				sys.stdout.write('.')
-				#line2 = line.replace("^^" + tag + "^^", "",1)		#remove looping tag
+				frontBit=""
+				backBit =""
+				if '""' in line:
+					splitString  = line[line.find("^^"):line.rfind('""')]
+					line2 = splitString
+					line2 = line2.replace('^^' + tag + '^^',"")
+					frontBit = line[0:line.find("^^")]
+					backBit = line[line.rfind('""')+2:len(line)]
+					#print "Front Bit: " + frontBit
+					#print "Line 2 " + line2
+					#print "RESULTING STRING " + line2
+					sys.stdout.write('.')
+				else:
+					splitString  = line.rpartition("^^" + tag + '^^')
+					line2 = splitString[2]
+					frontBit = splitString[0]
+					#print "RESULTING STRING " + line2
+					sys.stdout.write('.')
 				line = ""   #reset line to nil
 				for b in range(int(details[0]),int(details[1])+1):
 					line3 = line2.replace(details[2],str(b))
 					result = TPGEreplaceLine(idString,line3,root, baseDirectory)
 					if result <> "":
 						line = line + result
-				line = splitString[0] + line #Re add front bit
+				line = frontBit + line + backBit #Re add front bit
 
 			####### COMPLEX TAGS WITH INDEX
 			while find_between(line, "!!", "!!") != "":
@@ -154,8 +155,8 @@ def TPGEreplaceLine(idString, line, root, baseDirectory):
 				replaceValue = ""
 				if details[0] == details[1]:
 					replaceValue = details[2]
-				line = line.replace("<<" + tag + "<<", replaceValue,1)			
-			
+				line = line.replace("<<" + tag + "<<", replaceValue,1)
+
 	includeLine = True
 	##AFTER REPLACMENT TEST FOR INCLUSION
 	if line[:1] == "#":
@@ -216,7 +217,7 @@ def TPGEreplaceLine(idString, line, root, baseDirectory):
 			#includeLine = True
 		else:
 			#print"      Skipping Line   TAG DOESN'T EXIST    " + line[0:20]
-			includeLine = False			
+			includeLine = False
 	elif find_between(line, "++", "++") != "":
 		while find_between(line, "++", "++") != "":
 				#find first tag
@@ -229,8 +230,8 @@ def TPGEreplaceLine(idString, line, root, baseDirectory):
 				if details[0] != details[1]:
 					#print "      EXCLUDING"
 					includeLine=False
-					
-				line = line.replace("++" + tag + "++", "")	
+
+				line = line.replace("++" + tag + "++", "")
 	elif find_between(line, "??", "??") != "":
 		while find_between(line, "??", "??") != "":
 				#find first tag
@@ -242,9 +243,9 @@ def TPGEreplaceLine(idString, line, root, baseDirectory):
 				#@@oompPart.oompID,name@@
 				#print "Testing Equal: " +details[0] + "  " + details[1]
 				if details[0] == "inFamily":
-					
+
 					#print "Details " + details[1] + "  " + details[2]
-					noneCount=0					
+					noneCount=0
 
 					#testingType
 					extraItem = "Type"
@@ -255,7 +256,7 @@ def TPGEreplaceLine(idString, line, root, baseDirectory):
 							includeLine = False
 					else:
 						noneCount += 1
-					
+
 					#testingSize
 					extraItem = "Size"
 					partTest = TPGEgetValueWhere(details[1], root, "oompPart.oompID", "oomp"+ extraItem)
@@ -265,7 +266,7 @@ def TPGEreplaceLine(idString, line, root, baseDirectory):
 							includeLine = False
 					else:
 						noneCount += 1
-					
+
 					#testingColor
 					extraItem = "Color"
 					partTest = TPGEgetValueWhere(details[1], root, "oompPart.oompID", "oomp"+ extraItem)
@@ -275,7 +276,7 @@ def TPGEreplaceLine(idString, line, root, baseDirectory):
 							includeLine = False
 					else:
 						noneCount += 1
-					
+
 					#testingDesc
 					extraItem = "Desc"
 					partTest = TPGEgetValueWhere(details[1], root, "oompPart.oompID", "oomp"+ extraItem)
@@ -285,7 +286,7 @@ def TPGEreplaceLine(idString, line, root, baseDirectory):
 							includeLine = False
 					else:
 						noneCount += 1
-					
+
 					#testingIndex
 					extraItem = "Index"
 					partTest = TPGEgetValueWhere(details[1], root, "oompPart.oompID", "oomp"+ extraItem)
@@ -295,13 +296,13 @@ def TPGEreplaceLine(idString, line, root, baseDirectory):
 							includeLine = False
 					else:
 						noneCount += 1
-					
-					
+
+
 					if noneCount > 1:
 						includeLine = False
-					
-					
-				line = line.replace("??" + tag + "??", "")	
+
+
+				line = line.replace("??" + tag + "??", "")
 	#special tests
 	else:
 		r=7
@@ -321,12 +322,12 @@ def TPGEreplaceLine(idString, line, root, baseDirectory):
 
 def TPGEcreateXMLList(list):
 	xmlFiles = list
-	
+
 	try:
 		os.stat(tempPath)
 	except:
 		os.mkdir(tempPath)
-	
+
 	f = open(tempCombinedXMLFileName,'w+')
 	f.write("<xml>")
 
