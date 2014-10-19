@@ -115,6 +115,7 @@ def TPGEreplaceLine(idString, line, root, baseDirectory):
 			while find_between(line, "!!", "!!") != "":
 				#find first tag
 				tag = find_between(line, "!!", "!!")
+				#print "Tag = " + tag
 				details = tag.split(",")
 				#TPGEgetValueWhere(id, tree, testField, resultField)
 				#TPGEgetValueWhere("BOLT-M3-M-12-01", root, "oompPart.oompID", "name")
@@ -143,12 +144,23 @@ def TPGEreplaceLine(idString, line, root, baseDirectory):
 				value = TPGEgetValueWhere(details[0], root, details[1], details[2])
 				#print "Replacing Tag " + tag + "   " + value[0:20]
 				line = line.replace("@@" + tag + "@@", value,1)
-
+			while find_between(line, "<<", "<<") != "":
+				#find first tag
+				tag = find_between(line, "<<", "<<")
+				details = tag.split(",")
+				#TPGEgetValueWhere(id, tree, testField, resultField)
+				#TPGEgetValueWhere("BOLT-M3-M-12-01", root, "oompPart.oompID", "name")
+				#@@oompPart.oompID,name@@
+				replaceValue = ""
+				if details[0] == details[1]:
+					replaceValue = details[2]
+				line = line.replace("<<" + tag + "<<", replaceValue,1)			
+			
 	includeLine = True
 	##AFTER REPLACMENT TEST FOR INCLUSION
 	if line[:1] == "#":
 		#skip line as template comment
-		#print"Skipping Line   COMMENT    " + line[0:20]
+		print"Skipping Line   COMMENT    " + line[0:20]
 		includeLine = False
 	elif line[:1] == "$":
 		#Test for file existance id directory based
@@ -215,8 +227,82 @@ def TPGEreplaceLine(idString, line, root, baseDirectory):
 				#@@oompPart.oompID,name@@
 				#print "Testing Equal: " +details[0] + "  " + details[1]
 				if details[0] != details[1]:
+					#print "      EXCLUDING"
 					includeLine=False
+					
 				line = line.replace("++" + tag + "++", "")	
+	elif find_between(line, "??", "??") != "":
+		while find_between(line, "??", "??") != "":
+				#find first tag
+				tag = find_between(line, "??", "??")
+				#print "Tag = " + tag
+				details = tag.split(",")
+				#TPGEgetValueWhere(id, tree, testField, resultField)
+				#TPGEgetValueWhere("BOLT-M3-M-12-01", root, "oompPart.oompID", "name")
+				#@@oompPart.oompID,name@@
+				#print "Testing Equal: " +details[0] + "  " + details[1]
+				if details[0] == "inFamily":
+					
+					#print "Details " + details[1] + "  " + details[2]
+					noneCount=0					
+
+					#testingType
+					extraItem = "Type"
+					partTest = TPGEgetValueWhere(details[1], root, "oompPart.oompID", "oomp"+ extraItem)
+					familyTest = TPGEgetValueWhere(details[2], root, "oompFamily.familyName","family"+ extraItem)
+					if familyTest <> "":
+						if partTest != familyTest:
+							includeLine = False
+					else:
+						noneCount += 1
+					
+					#testingSize
+					extraItem = "Size"
+					partTest = TPGEgetValueWhere(details[1], root, "oompPart.oompID", "oomp"+ extraItem)
+					familyTest = TPGEgetValueWhere(details[2], root, "oompFamily.familyName","family"+ extraItem)
+					if familyTest <> "":
+						if partTest != familyTest:
+							includeLine = False
+					else:
+						noneCount += 1
+					
+					#testingColor
+					extraItem = "Color"
+					partTest = TPGEgetValueWhere(details[1], root, "oompPart.oompID", "oomp"+ extraItem)
+					familyTest = TPGEgetValueWhere(details[2], root, "oompFamily.familyName","family"+ extraItem)
+					if familyTest <> "":
+						if partTest != familyTest:
+							includeLine = False
+					else:
+						noneCount += 1
+					
+					#testingDesc
+					extraItem = "Desc"
+					partTest = TPGEgetValueWhere(details[1], root, "oompPart.oompID", "oomp"+ extraItem)
+					familyTest = TPGEgetValueWhere(details[2], root, "oompFamily.familyName","family"+ extraItem)
+					if familyTest <> "":
+						if partTest != familyTest:
+							includeLine = False
+					else:
+						noneCount += 1
+					
+					#testingIndex
+					extraItem = "Index"
+					partTest = TPGEgetValueWhere(details[1], root, "oompPart.oompID", "oomp"+ extraItem)
+					familyTest = TPGEgetValueWhere(details[2], root, "oompFamily.familyName","family"+ extraItem)
+					if familyTest <> "":
+						if partTest != familyTest:
+							includeLine = False
+					else:
+						noneCount += 1
+					
+					
+					if noneCount > 1:
+						includeLine = False
+					
+					
+				line = line.replace("??" + tag + "??", "")	
+	#special tests
 	else:
 		r=7
 	if includeLine:

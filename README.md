@@ -39,11 +39,20 @@ A command line python tool used for generating pages from template files, being 
 |Tag Marker			|	Description																			|	Example	
 |-------------------|---------------------------------------------------------------------------------------|-------------------------------|
 | $$ 				| Test for file existing if it does process line file between %%FILENAME%% referenced on base directory | $$%%ID%%.jpg	|
-| ** 				| Test if a tag value exists															|	**ID,tag to match,name of tag to return** (TEST value for  @@ above TODO-make a wrapper to use @@)
+| ** 				| Test if a tag value exists															|	\*\*ID,tag to match,name of tag to return\*\*(TEST value for  @@ above TODO-make a wrapper to use @@)
 | == 				| Test if a tag exists (index linked)													|	==1,oompPart.oompID,name== (TEST value for  !! above TODO-make a wrapper to use !!)
-| ++ 				| Include if two values are the same													|	++CRHO,CRHO++ ++@@%%ID%%,oompPart.oompID,hexID@@,AEA++	
+| ++ 				| Include if two values are the same (whole Line)										|	++CRHO,CRHO++ ++@@%%ID%%,oompPart.oompID,hexID@@,AEA++	
+| <<				| Include tag (ie. value, value, include text)											|	++CRHO,CRHO, text to include++
 
 ### Special Types
+|Tag Marker			|	Description																			|	Example	
+|-------------------|---------------------------------------------------------------------------------------|-------------------------------|
+| ?? 				| Marks a special inclusion test, first item is test type											| ??inFamily,ID,FamilyName??
+
+SPECIAL TESTS
+|Tag Marker			|	Description																			|	Example	
+|-------------------|---------------------------------------------------------------------------------------|-------------------------------|
+| inFamily			| Whether an ID is in a family															| ??inFamily,ID,FamilyName??
 
 	To Implement
 	-Test if in family-
