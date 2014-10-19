@@ -1,7 +1,7 @@
 # oomlout-TPGE
 A command line python tool used for generating pages from template files, being fed by xml.
 
-## Command Line Parametwers
+## Command Line Parameters
 
 * -id				-- id String
 * -bd				-- baseDirectory
