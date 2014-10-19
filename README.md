@@ -34,7 +34,8 @@ A command line python tool used for generating pages from template files, being 
 
 ### Inclusion Test Tags
 
---NO spaces between these important first charachter (the case for some but not others)
+-- NO spaces between these important first charachter (the case for some but not others)
+
 |Tag Marker			|	Description																			|	Example	
 |-------------------|---------------------------------------------------------------------------------------|-------------------------------|
 | $$ 				| Test for file existing if it does process line file between %%FILENAME%% referenced on base directory | $$%%ID%%.jpg	|
@@ -51,6 +52,6 @@ A command line python tool used for generating pages from template files, being 
 
 ## File Descriptions
 
-'TPGEmain.py		-- The main command line program
-'TPGEgeneration.py	-- Used for generating files
-'TPGExml.py			-- XML support routines
+* TPGEmain.py		-- The main command line program
+* TPGEgeneration.py	-- Used for generating files
+* TPGExml.py			-- XML support routines
