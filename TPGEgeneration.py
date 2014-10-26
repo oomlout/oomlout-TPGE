@@ -207,17 +207,19 @@ def TPGEreplaceLine(idString, line, root, baseDirectory):
 		#print tag
 		try:
 			value = TPGEgetValueIndex(details[0], root, details[1], details[2])
+			#print "Replacing Tag " + tag + "   " + value[0:20]
+			line = line.replace("==" + tag + "==", "",1)
+			if value <> "":
+				line = line.replace("==" + tag + "==", "")
+				#includeLine = True
+			else:
+				#print"      Skipping Line   TAG DOESN'T EXIST    " + line[0:20]
+				includeLine = False
 		except IndexError:
-			print "ERROR IN LINE: " + tag + "LINE: " + line
-			raise IndexError
-		#print "Replacing Tag " + tag + "   " + value[0:20]
-		line = line.replace("==" + tag + "==", "",1)
-		if value <> "":
-			line = line.replace("==" + tag + "==", "")
-			#includeLine = True
-		else:
-			#print"      Skipping Line   TAG DOESN'T EXIST    " + line[0:20]
-			includeLine = False
+			pass
+			#print "ERROR IN LINE: " + tag + "LINE: " + line
+			#raise IndexError
+			#added to allow for WIKImedia style formating
 	elif find_between(line, "++", "++") != "":
 		while find_between(line, "++", "++") != "":
 				#find first tag
@@ -307,6 +309,9 @@ def TPGEreplaceLine(idString, line, root, baseDirectory):
 	else:
 		r=7
 	if includeLine:
+		##Add new line's
+
+		line = line.replace("~~", "\n")
 		return line
 	else:
 		return ""
