@@ -234,6 +234,20 @@ def TPGEreplaceLine(idString, line, root, baseDirectory):
 					includeLine=False
 
 				line = line.replace("++" + tag + "++", "")
+	elif find_between(line, "!+", "!+") != "":
+		while find_between(line, "!+", "!+") != "":
+				#find first tag
+				tag = find_between(line, "!+", "!+")
+				details = tag.split(",")
+				#TPGEgetValueWhere(id, tree, testField, resultField)
+				#TPGEgetValueWhere("BOLT-M3-M-12-01", root, "oompPart.oompID", "name")
+				#@@oompPart.oompID,name@@
+				#print "Testing Equal: " +details[0] + "  " + details[1]
+				if details[0] != details[1]:
+					#print "      EXCLUDING"
+					includeLine=False
+
+				line = line.replace("!+" + tag + "!+", "")
 	elif find_between(line, "??", "??") != "":
 		while find_between(line, "??", "??") != "":
 				#find first tag

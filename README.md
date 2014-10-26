@@ -43,6 +43,7 @@ A command line python tool used for generating pages from template files, being 
 | ** 				| Test if a tag value exists															|	\*\*ID,tag to match,name of tag to return\*\*(TEST value for  @@ above TODO-make a wrapper to use @@)
 | == 				| Test if a tag exists (index linked)													|	==1,oompPart.oompID,name== (TEST value for  !! above TODO-make a wrapper to use !!)
 | ++ 				| Include if two values are the same (whole Line)										|	++CRHO,CRHO++ ++@@%%ID%%,oompPart.oompID,hexID@@,AEA++	
+| !+ 				| Include if two values are not the same (whole Line)	
 | <<				| Include tag (ie. value, value, include text)											|	++CRHO,CRHO, text to include++
 
 ### Special Types
