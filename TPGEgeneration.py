@@ -30,7 +30,7 @@ def find_between( s, first, last ):
 
 # Main Routine
 def TPGEgeneratePages(idString, baseDirectory, xmlAdd, extraXML,template,output):
-	print ("  TPGE -- Generating Pages")
+	#print ("  TPGE -- Generating Pages")
 
 	root = TPGEloadXML()
 
@@ -43,7 +43,7 @@ def TPGEgeneratePages(idString, baseDirectory, xmlAdd, extraXML,template,output)
 		templateFileName = "template/TEST-template.tmpl"
 		templateFile = open("template/TEST-template.tmpl","r")
 
-	print "Using Template:  " + templateFileName
+	#print "Using Template:  " + templateFileName
 
 	outputFileName = output
 
@@ -84,7 +84,7 @@ def TPGEreplaceLine(idString, line, root, baseDirectory):
 		###^^0,12,%%U%%^^
 			if find_between(line, "^^", "^^") != "":
 				tag = find_between(line, "^^", "^^")
-				print "Loop Tag Found: " + tag
+				#print "Loop Tag Found: " + tag
 				details = tag.split(",")
 				frontBit=""
 				backBit =""
@@ -97,13 +97,13 @@ def TPGEreplaceLine(idString, line, root, baseDirectory):
 					#print "Front Bit: " + frontBit
 					#print "Line 2 " + line2
 					#print "RESULTING STRING " + line2
-					sys.stdout.write('.')
+					#sys.stdout.write('.')
 				else:
 					splitString  = line.rpartition("^^" + tag + '^^')
 					line2 = splitString[2]
 					frontBit = splitString[0]
 					#print "RESULTING STRING " + line2
-					sys.stdout.write('.')
+					#sys.stdout.write('.')
 				line = ""   #reset line to nil
 				for b in range(int(details[0]),int(details[1])+1):
 					line3 = line2.replace(details[2],str(b))
@@ -142,6 +142,7 @@ def TPGEreplaceLine(idString, line, root, baseDirectory):
 				#TPGEgetValueWhere(id, tree, testField, resultField)
 				#TPGEgetValueWhere("BOLT-M3-M-12-01", root, "oompPart.oompID", "name")
 				#@@oompPart.oompID,name@@
+				#print "TAG:  " + tag
 				value = TPGEgetValueWhere(details[0], root, details[1], details[2])
 				#print "Replacing Tag " + tag + "   " + value[0:20]
 				line = line.replace("@@" + tag + "@@", value,1)
@@ -161,7 +162,7 @@ def TPGEreplaceLine(idString, line, root, baseDirectory):
 	##AFTER REPLACMENT TEST FOR INCLUSION
 	if line[:1] == "#":
 		#skip line as template comment
-		print"Skipping Line   COMMENT    " + line[0:20]
+		#print"Skipping Line   COMMENT    " + line[0:20]
 		includeLine = False
 	elif line[:1] == "$":
 		#Test for file existance id directory based
@@ -172,30 +173,32 @@ def TPGEreplaceLine(idString, line, root, baseDirectory):
 			#includeLine = True
 			f=0
 		else:
-			#print"Skipping Line   FILE DOESN'T EXIST    " + line[0:20]
+			#print"     Skipping Line   FILE DOESN'T EXIST    " + line[0:20]
 			includeLine = False
-	elif line[:1] == "*":
-		#Test for tag existance
-		#find first tag
-		tag = find_between(line, "**", "**")
-		details = tag.split(",")
-		#TPGEgetValueWhere(id, tree, testField, resultField)
-		#TPGEgetValueWhere("BOLT-M3-M-12-01", root, "oompPart.oompID", "name")
-		#@@oompPart.oompID,name@@
-		#print tag
-		try:
-			value = TPGEgetValueWhere(details[0], root, details[1], details[2])
-		except IndexError:
-			print "ERROR IN LINE: " + tag + "LINE: " + line
-			raise IndexError
-		#print "Replacing Tag " + tag + "   " + value[0:20]
-		line = line.replace("**" + tag + "**", "",1)
-		if value <> "":
-			line = line.replace("**" + tag + "**", "")
-			#includeLine = True
-		else:
-			#print"      Skipping Line   TAG DOESN'T EXIST    " + line[0:20]
-			includeLine = False
+	elif find_between(line, "**", "**") != "":
+		while find_between(line, "**", "**") != "":
+			#Test for tag existance
+			#find first tag
+			tag = find_between(line, "**", "**")
+			details = tag.split(",")
+			#TPGEgetValueWhere(id, tree, testField, resultField)
+			#TPGEgetValueWhere("BOLT-M3-M-12-01", root, "oompPart.oompID", "name")
+			#@@oompPart.oompID,name@@
+			#print tag
+			try:
+				value = TPGEgetValueWhere(details[0], root, details[1], details[2])
+			except IndexError:
+				print "ERROR IN LINE: " + tag + "LINE: " + line
+				raise IndexError
+			#print "Replacing Tag " + tag + "   " + value[0:20]
+			line = line.replace("**" + tag + "**", "",1)
+			if value <> "":
+				line = line.replace("**" + tag + "**", "")
+				#includeLine = True
+			else:
+				#print"      Skipping Line   TAG DOESN'T EXIST    " + line[0:20]
+				#print "Skipping Due To **"
+				includeLine = False
 	elif line[:1] == "=":
 		#Test for tag existance
 		#find first tag
@@ -232,22 +235,22 @@ def TPGEreplaceLine(idString, line, root, baseDirectory):
 				if details[0] != details[1]:
 					#print "      EXCLUDING"
 					includeLine=False
-
+					#print "Skipping Due To ++"
 				line = line.replace("++" + tag + "++", "")
-	elif find_between(line, "!+", "!+") != "":
-		while find_between(line, "!+", "!+") != "":
+	elif find_between(line, "--", "--") != "":
+		while find_between(line, "--", "--") != "":
 				#find first tag
-				tag = find_between(line, "!+", "!+")
+				tag = find_between(line, "--", "--")
 				details = tag.split(",")
 				#TPGEgetValueWhere(id, tree, testField, resultField)
 				#TPGEgetValueWhere("BOLT-M3-M-12-01", root, "oompPart.oompID", "name")
 				#@@oompPart.oompID,name@@
 				#print "Testing Equal: " +details[0] + "  " + details[1]
-				if details[0] != details[1]:
+				if details[0] == details[1]:
 					#print "      EXCLUDING"
 					includeLine=False
-
-				line = line.replace("!+" + tag + "!+", "")
+					#print "Skipping Due To --"
+				line = line.replace("--" + tag + "--", "")
 	elif find_between(line, "??", "??") != "":
 		while find_between(line, "??", "??") != "":
 				#find first tag

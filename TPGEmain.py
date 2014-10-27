@@ -73,7 +73,7 @@ def TPGEgenerateAllPages(baseDirectory, xmlAdd, template, outputFile, extraXML):
 
 	for x in os.walk(baseDirectory):
 		idString = str(x[0].replace(baseDirectory, ""))
-		print "     Generating ---> " + idString
+		print "  TPGE-Generating ---> " + idString
 		outputFile2 = outputFile.replace("%%ID%%", idString)
 		if idString <> "" :
 			TPGEgeneratePages(idString, baseDirectory + idString + "/", xmlAdd, baseDirectory, template, outputFile2)
