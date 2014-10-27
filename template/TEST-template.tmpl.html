@@ -1,0 +1,18 @@
+## PROJ - Template
+## Template for creating a page for a product (given 4 letter ID and directory)
+## To Run this
+#python %TPGEdirectory%TPGEmain.py -id CRHO-I01-B-02PI-01 -bd C:\KB\oomp-scripts\oomp-gen\parts\ -xa .oomp -ex C:\KB\oomp-scripts\oomp-gen\parts\ -tm template/TEST-template.tmpl.html -of C:\GH\oomlout-TPGE\tmp\TEST.html
+
+@@%%ID%%,oompPart.oompID,name@@
+<br><br>
+@@%%ID%%,oompPart.oompID,sourceList.manufacturer.company@@
+<br><br>
+@@%%ID%%,oompPart.oompID,sourceList.bigDistributor.company@@
+<br><br>
+@@%%ID%%,oompPart.oompID,sourceList.bigDistributor.company$$2$$@@
+<br><br>
+@@%%ID%%,oompPart.oompID,sourceList.bigDistributor.companyCode$$3$$@@
+<br><br>
+@@%%ID%%,oompPart.oompID,sourceList@@
+<br><br>
+@@%%ID%%,oompPart.oompID,oompAbout@@

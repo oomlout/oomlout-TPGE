@@ -157,7 +157,17 @@ def TPGEreplaceLine(idString, line, root, baseDirectory):
 				if details[0] == details[1]:
 					replaceValue = details[2]
 				line = line.replace("<<" + tag + "<<", replaceValue,1)
-
+			while find_between(line, ">>", ">>") != "":
+				#find first tag
+				tag = find_between(line, ">>", ">>")
+				details = tag.split(",")
+				#TPGEgetValueWhere(id, tree, testField, resultField)
+				#TPGEgetValueWhere("BOLT-M3-M-12-01", root, "oompPart.oompID", "name")
+				#@@oompPart.oompID,name@@
+				replaceValue = ""
+				if details[0] != details[1]:
+					replaceValue = details[2]
+				line = line.replace(">>" + tag + ">>", replaceValue,1)
 	includeLine = True
 	##AFTER REPLACMENT TEST FOR INCLUSION
 	if line[:1] == "#":
@@ -177,6 +187,7 @@ def TPGEreplaceLine(idString, line, root, baseDirectory):
 			includeLine = False
 	elif find_between(line, "**", "**") != "":
 		while find_between(line, "**", "**") != "":
+
 			#Test for tag existance
 			#find first tag
 			tag = find_between(line, "**", "**")
@@ -203,6 +214,7 @@ def TPGEreplaceLine(idString, line, root, baseDirectory):
 		#Test for tag existance
 		#find first tag
 		tag = find_between(line, "==", "==")
+
 		details = tag.split(",")
 		#TPGEgetValueWhere(id, tree, testField, resultField)
 		#TPGEgetValueWhere("BOLT-M3-M-12-01", root, "oompPart.oompID", "name")
@@ -220,7 +232,7 @@ def TPGEreplaceLine(idString, line, root, baseDirectory):
 				includeLine = False
 		except IndexError:
 			pass
-			#print "ERROR IN LINE: " + tag + "LINE: " + line
+			#print "ERROR IN LINE: Bypassed for wiki formatting" + tag
 			#raise IndexError
 			#added to allow for WIKImedia style formating
 	elif find_between(line, "++", "++") != "":
@@ -230,6 +242,7 @@ def TPGEreplaceLine(idString, line, root, baseDirectory):
 				details = tag.split(",")
 				#TPGEgetValueWhere(id, tree, testField, resultField)
 				#TPGEgetValueWhere("BOLT-M3-M-12-01", root, "oompPart.oompID", "name")
+				#@@oompPart.oompID,name@@
 				#@@oompPart.oompID,name@@
 				#print "Testing Equal: " +details[0] + "  " + details[1]
 				if details[0] != details[1]:
@@ -246,11 +259,15 @@ def TPGEreplaceLine(idString, line, root, baseDirectory):
 				#TPGEgetValueWhere("BOLT-M3-M-12-01", root, "oompPart.oompID", "name")
 				#@@oompPart.oompID,name@@
 				#print "Testing Equal: " +details[0] + "  " + details[1]
-				if details[0] == details[1]:
-					#print "      EXCLUDING"
-					includeLine=False
-					#print "Skipping Due To --"
-				line = line.replace("--" + tag + "--", "")
+				try:
+					#was killing one so fixed
+					if details[0] == details[1]:
+						#print "      EXCLUDING"
+						includeLine=False
+						#print "Skipping Due To --"
+					line = line.replace("--" + tag + "--", "")
+				except IndexError:
+					line = line.replace("--" + tag + "--", "")
 	elif find_between(line, "??", "??") != "":
 		while find_between(line, "??", "??") != "":
 				#find first tag

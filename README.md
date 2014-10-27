@@ -31,7 +31,7 @@ A command line python tool used for generating pages from template files, being 
 |-------------------|---------------------------------------------------------------------------------------|-------------------------------|
 | !!				| Complex tag format index																|	!!1,oompPart.oompID,name!! -- Returns first name of first oompPart
 | @1-@9				| Priority tag processing 1 first 9 last same as below									|
-| @@ 				| Complex tag format																	|	@@ID,tag to match,name of tag to return@@		@@%%ID%%,oompPart.oompID,name@@
+| @@ 				| Complex tag format	(add &&#&& to get index of an item ie.&&2&& second occurrence)																|	@@ID,tag to match,name of tag to return@@		@@%%ID%%,oompPart.oompID,name@@
 
 ### Inclusion Test Tags
 
@@ -45,6 +45,7 @@ A command line python tool used for generating pages from template files, being 
 | ++ 				| Include if two values are the same (whole Line)										|	++CRHO,CRHO++ ++@@%%ID%%,oompPart.oompID,hexID@@,AEA++
 | -- 				| Include if two values are not the same (whole Line)
 | <<				| Include tag (ie. value, value, include text)											|	++CRHO,CRHO, text to include++
+| >>				| Include tag if not equal (ie. value, value, include text)		
 
 ### Special Types
 |Tag Marker			|	Description																			|	Example

@@ -22,6 +22,8 @@ def TPGEgetValue(lookupString, tree):
 
 	return value
 
+
+
 def TPGEgetValueExtra(lookupString, tree, testValue, returnValue):
 
 
@@ -44,6 +46,9 @@ def TPGEgetValueExtra(lookupString, tree, testValue, returnValue):
 		value = ""
 
 	return value
+
+
+
 
 ##
 ## Returns the Element where testfield = ID
@@ -89,10 +94,27 @@ def TPGEgetAllFilesIterate(directory, extension):
 ##
 def TPGEgetValueWhere(id, tree, testField, resultField):
 
-	result = TPGEgetElementWhere(id, tree, testField)
-	return TPGEgetValue(resultField, result)
+	if find_between(resultField, "&&", "&&") <> "":
+		pass
+	else:
+		resultField = resultField + "&&0&&"
 
+	index = find_between(resultField, "&&", "&&")
+	resultField = resultField.replace("&&" + index + "&&", "")
 
+	if index == "0":
+		#out style first index remaining unchanged
+		result = TPGEgetElementWhere(id, tree, testField)
+		return TPGEgetValue(resultField, result)
+	else:
+		result = TPGEgetElementWhere(id, tree, testField)
+		p = resultField.split(".")
+		#needs fixing for more than 3 elements
+		testField = p[0]
+		result = TPGEgetElementIndex(0, result, testField)
+		returnValue = TPGEgetValueIndex(index, result, p[1], p[2])
+
+		return returnValue
 ##
 ## Returns the Element where index = index
 ##	Add full stop to go down a level ie. oompPart.oompID
@@ -101,17 +123,35 @@ def TPGEgetElementIndex(index, tree, testField):
 
 	xmlLookup = testField.split(".")
 	running = True
-	for x in range(0,len(xmlLookup)-1):
-			try:
-				#try and find the text if not found try and go down one step
-				value = tree.findall(xmlLookup[x])
-			except AttributeError:
-				#print "     XML TAG NOT FOUND " + testField + "  --  " + xmlLookup[x]
-				value = ""
-	try:
-		returnValue = value[int(index)]
-	except IndexError:
-		returnValue = ""
+
+	#messy way to deal with length one issue (could be fixed)
+	if len(xmlLookup) == 1:
+
+		for x in range(0,len(xmlLookup)):
+				try:
+					#try and find the text if not found try and go down one step
+					value = tree.findall(xmlLookup[x])
+				except AttributeError:
+					#print "     XML TAG NOT FOUND " + testField + "  --  " + xmlLookup[x]
+					value = ""
+		try:
+			returnValue = value[int(index)]
+		except IndexError:
+			returnValue = ""
+
+	else:
+
+		for x in range(0,len(xmlLookup)-1):
+				try:
+					#try and find the text if not found try and go down one step
+					value = tree.findall(xmlLookup[x])
+				except AttributeError:
+					#print "     XML TAG NOT FOUND " + testField + "  --  " + xmlLookup[x]
+					value = ""
+		try:
+			returnValue = value[int(index)]
+		except IndexError:
+			returnValue = ""
 
 
 	return returnValue
@@ -122,9 +162,16 @@ def TPGEgetElementIndex(index, tree, testField):
 def TPGEgetValueIndex(index, tree, testField, resultField):
 
 	result = TPGEgetElementIndex(index, tree, testField)
+
 	return TPGEgetValue(resultField, result)
 
-
+def find_between( s, first, last ):
+    try:
+        start = s.index( first ) + len( first )
+        end = s.index( last, start )
+        return s[start:end]
+    except ValueError:
+        return ""
 
 
 
