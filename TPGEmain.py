@@ -69,8 +69,7 @@ print runMode
 
 def TPGEgenerateAllPages(baseDirectory, xmlAdd, template, outputFile, extraXML):
 	print "Generating All OOMP Files:"
-	TPGEcreateXML("", baseDirectory, xmlAdd, baseDirectory)
-
+	TPGEcreateXML("", baseDirectory, xmlAdd, extraXML)
 	for x in os.walk(baseDirectory):
 		idString = str(x[0].replace(baseDirectory, ""))
 		print "  TPGE-Generating ---> " + idString
