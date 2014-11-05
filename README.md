@@ -31,7 +31,8 @@ A command line python tool used for generating pages from template files, being 
 |-------------------|---------------------------------------------------------------------------------------|-------------------------------|
 | !!				| Complex tag format index																|	!!1,oompPart.oompID,name!! -- Returns first name of first oompPart
 | @1-@9				| Priority tag processing 1 first 9 last same as below									|
-| @@ 				| Complex tag format	(add &&#&& to get index of an item ie.&&2&& second occurrence)																|	@@ID,tag to match,name of tag to return@@		@@%%ID%%,oompPart.oompID,name@@
+| @@ 				| Complex tag format	(add &&#&& to get index of an item ie.&&2&& second occurrence)																|	@@ID,tag to match,name of tag to return@@		@@%%ID%%,oompPart.oompID,name@@<br> Example for items out of a list<br>@@%%ID%%,oomloutPart.oomID,partsList.partEntry.qty&&%%Y%%&&@@
+
 
 ### Inclusion Test Tags
 

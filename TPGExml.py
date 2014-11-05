@@ -94,6 +94,8 @@ def TPGEgetAllFilesIterate(directory, extension):
 ##
 def TPGEgetValueWhere(id, tree, testField, resultField):
 
+	#print "TPGEgetValueWhere(id, tree, testField, resultField)" + id + " " + testField + " " + resultField
+
 	if find_between(resultField, "&&", "&&") <> "":
 		pass
 	else:
@@ -110,10 +112,23 @@ def TPGEgetValueWhere(id, tree, testField, resultField):
 		result = TPGEgetElementWhere(id, tree, testField)
 		p = resultField.split(".")
 		#needs fixing for more than 3 elements
-		testField = p[0]
-		result = TPGEgetElementIndex(0, result, testField)
-		returnValue = TPGEgetValueIndex(index, result, p[1], p[2])
 
+
+		if len(p) == 3:
+			testField = p[0]
+			result = TPGEgetElementIndex(0, result, testField)
+			returnValue = TPGEgetValueIndex(index, result, p[1], p[2])
+		elif len(p) == 2:
+			testField = p[0]
+			#result = TPGEgetElementIndex(0, result, testField)
+			print str(result.text) + "   " + p[0] +  "  " + p[1]
+
+			returnValue = TPGEgetValueIndex(index, result, p[0], p[1])
+
+
+
+			#returnValue =  TPGEgetValueIndex(index, result, "includesList.include", "include")
+			#returnValue =  TPGEgetValueIndex(index, result, resultField, p[1])
 		return returnValue
 ##
 ## Returns the Element where index = index

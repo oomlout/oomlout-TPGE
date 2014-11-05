@@ -106,8 +106,10 @@ def TPGEreplaceLine(idString, line, root, baseDirectory):
 					#sys.stdout.write('.')
 				line = ""   #reset line to nil
 				for b in range(int(details[0]),int(details[1])+1):
+					#print "Looping: " + str(b)
 					line3 = line2.replace(details[2],str(b))
 					result = TPGEreplaceLine(idString,line3,root, baseDirectory)
+					#print result
 					if result <> "":
 						line = line + result
 				line = frontBit + line + backBit #Re add front bit
