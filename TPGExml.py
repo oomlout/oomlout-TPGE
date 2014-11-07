@@ -83,7 +83,7 @@ def TPGEgetAllFilesIterate(directory, extension):
 	import os
 	for root, dirs, files in os.walk(directory):
 		for file in files:
-			if file.endswith(extension):
+			if file.endswith(extension) or file.endswith(".xml"):
 				returnValue.append(root + "\\" + file)
 
 

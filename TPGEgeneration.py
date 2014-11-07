@@ -388,6 +388,11 @@ def TPGEcreateXMLList(list):
 
 def TPGEcreateXML(idString, baseDirectory, xmlAdd, extraXML):
 
+	if extraXML != "":
+		extraXML = extraXML + "," + baseDirectory
+	else:
+		extraXML = baseDirectory + ","
+
 	xmlFileName = TPGEgetAllFilesIterate("tags/", ".xml")
 
 	fileList = extraXML.split(",")
@@ -401,6 +406,8 @@ def TPGEcreateXML(idString, baseDirectory, xmlAdd, extraXML):
 		else:
 			moreXML.append(item)
 	moreXML = moreXML + xmlFileName
+
+
 
 	TPGEcreateXMLList(moreXML)
 
