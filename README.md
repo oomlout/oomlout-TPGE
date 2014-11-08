@@ -21,9 +21,11 @@ A command line python tool used for generating pages from template files, being 
 |Tag Marker			|	Description																			|	Example
 |-------------------|---------------------------------------------------------------------------------------|-------------------------------|
 | ## 				|	Marks line as a comment																|	##A Comment
+| ::::	- ;;;;		|	Multi line statement start with this and only this and end with it as well
 | %% 				|	Replace with program variable (ie. ID)												|	%%ID%%	(currently only ID supported, plans to add date etc.)
 | ~~				| 	Replace with new line charachter													| 	~~
 | ^^ ("" end bracket)|	Process the following line for a range 0 to 12 replacing %%U%% with the variable	|	^^0,12,%%U%%^^CONTENT TO PROCESS""  (loop from 0 to 12, replacing the tag %%U%% in the current line, can be used recursively but some care is needed. Everything to the right of this loop tag is processed with it) ("" used to bracket effective area so to allow adding things at the end rather than every cycle)
+
 
 ### Replacing Tags Based On XML
 
@@ -31,7 +33,8 @@ A command line python tool used for generating pages from template files, being 
 |-------------------|---------------------------------------------------------------------------------------|-------------------------------|
 | !!				| Complex tag format index																|	!!1,oompPart.oompID,name!! -- Returns first name of first oompPart
 | @1-@9				| Priority tag processing 1 first 9 last same as below									|
-| @@ 				| Complex tag format	(add &&#&& to get index of an item ie.&&2&& second occurrence)																|	@@ID,tag to match,name of tag to return@@		@@%%ID%%,oompPart.oompID,name@@<br> Example for items out of a list<br>@@%%ID%%,oomloutPart.oomID,partsList.partEntry.qty&&%%Y%%&&@@
+| @@ 				| Complex tag format	(add &&#&& to get index of an item ie.&&2&& second occurrence)	|															|	@@ID,tag to match,name of tag to return@@		@@%%ID%%,oompPart.oompID,name@@<br> Example for items out of a list<br>@@%%ID%%,oomloutPart.oomID,partsList.partEntry.qty&&%%Y%%&&@@
+| //				| Test for file																			|   //f.jpg,if exists, if doesn't// 						
 
 
 ### Inclusion Test Tags

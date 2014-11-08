@@ -51,10 +51,36 @@ def TPGEgeneratePages(idString, baseDirectory, xmlAdd, extraXML,template,output)
 
 
 	#replaceTags
+	runLine = ""
+
+	running = False
 	for line in templateFile.readlines():
-		line = TPGEreplaceLine(idString, line, root, baseDirectory)
-		if line <> "":
-			outputFile.write(line)
+
+
+		#test for multiline entry
+		if line.startswith("::::",0,4) or running == True:
+			#print "    ML    " + line
+			running = True
+			if running:
+				if line.startswith(";;;;",0,4):
+					line = TPGEreplaceLine(idString, runLine, root, baseDirectory)
+					runLine = ""
+					running = False
+					#print "   FINISHED MULTILINE"
+					if line <> "":
+						line = line.replace("::::","")
+						line = line.replace(";;;;","")
+						outputFile.write(line)
+				else:
+					#print "    Adding to line"
+					runLine = runLine + "~~" + line
+		else:
+			#print "    RL" + line + "()"
+			runLine = line
+			line = TPGEreplaceLine(idString, runLine, root, baseDirectory)
+			runLine = ""
+			if line <> "":
+				outputFile.write(line)
 	outputFile.close()
 
 
@@ -92,6 +118,7 @@ def TPGEreplaceLine(idString, line, root, baseDirectory):
 					splitString  = line[line.find("^^"):line.rfind('""')]
 					line2 = splitString
 					line2 = line2.replace('^^' + tag + '^^',"")
+					print line2
 					frontBit = line[0:line.find("^^")]
 					backBit = line[line.rfind('""')+2:len(line)]
 					#print "Front Bit: " + frontBit
@@ -106,13 +133,15 @@ def TPGEreplaceLine(idString, line, root, baseDirectory):
 					#sys.stdout.write('.')
 				line = ""   #reset line to nil
 				for b in range(int(details[0]),int(details[1])+1):
+					sys.stdout.write('.')
 					#print "Looping: " + str(b)
 					line3 = line2.replace(details[2],str(b))
 					result = TPGEreplaceLine(idString,line3,root, baseDirectory)
 					#print result
 					if result <> "":
 						line = line + result
-				line = frontBit + line + backBit #Re add front bit
+				line = frontBit + line + TPGEreplaceLine(idString,backBit,root, baseDirectory) #Re add front bit
+				print ""
 
 			####### COMPLEX TAGS WITH INDEX
 			while find_between(line, "!!", "!!") != "":
@@ -148,6 +177,17 @@ def TPGEreplaceLine(idString, line, root, baseDirectory):
 				value = TPGEgetValueWhere(details[0], root, details[1], details[2])
 				#print "Replacing Tag " + tag + "   " + value[0:20]
 				line = line.replace("@@" + tag + "@@", value,1)
+			while find_between(line, "//", "//") != "":
+				tag = find_between(line, "//", "//")
+				details = tag.split(",")
+				if os.path.isfile(baseDirectory + details[0]):
+					value = details[1]
+				else:
+					try:
+						value = details[2]
+					except:
+						value = ""
+				line = line.replace("//" + tag + "//", value,1)
 			while find_between(line, "<<", "<<") != "":
 				#find first tag
 				tag = find_between(line, "<<", "<<")
