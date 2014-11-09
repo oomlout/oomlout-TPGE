@@ -129,6 +129,7 @@ def TPGEgetValueWhere(id, tree, testField, resultField):
 
 			#returnValue =  TPGEgetValueIndex(index, result, "includesList.include", "include")
 			#returnValue =  TPGEgetValueIndex(index, result, resultField, p[1])
+
 		return returnValue
 ##
 ## Returns the Element where index = index

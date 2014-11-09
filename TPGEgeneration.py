@@ -70,10 +70,13 @@ def TPGEgeneratePages(idString, baseDirectory, xmlAdd, extraXML,template,output)
 					if line <> "":
 						line = line.replace("::::","")
 						line = line.replace(";;;;","")
+						line = line.rstrip()
+						line = line.lstrip()
+						line = line + "\n"
 						outputFile.write(line)
 				else:
 					#print "    Adding to line"
-					runLine = runLine + "~~" + line
+					runLine = runLine + line
 		else:
 			#print "    RL" + line + "()"
 			runLine = line
@@ -133,6 +136,7 @@ def TPGEreplaceLine(idString, line, root, baseDirectory):
 					#sys.stdout.write('.')
 				line = ""   #reset line to nil
 				for b in range(int(details[0]),int(details[1])+1):
+					#print b
 					#sys.stdout.write('.')
 					#print "Looping: " + str(b)
 					line3 = line2.replace(details[2],str(b))
@@ -141,7 +145,7 @@ def TPGEreplaceLine(idString, line, root, baseDirectory):
 					if result <> "":
 						line = line + result
 				line = frontBit + line + TPGEreplaceLine(idString,backBit,root, baseDirectory) #Re add front bit
-				print ""
+				#print ""
 
 			####### COMPLEX TAGS WITH INDEX
 			while find_between(line, "!!", "!!") != "":
@@ -177,8 +181,8 @@ def TPGEreplaceLine(idString, line, root, baseDirectory):
 				value = TPGEgetValueWhere(details[0], root, details[1], details[2])
 				#print "Replacing Tag " + tag + "   " + value[0:20]
 				line = line.replace("@@" + tag + "@@", value,1)
-			while find_between(line, "//", "//") != "":
-				tag = find_between(line, "//", "//")
+			while find_between(line, "''", "''") != "":
+				tag = find_between(line, "''", "''")
 				details = tag.split(",")
 				if os.path.isfile(baseDirectory + details[0]):
 					value = details[1]
@@ -187,7 +191,7 @@ def TPGEreplaceLine(idString, line, root, baseDirectory):
 						value = details[2]
 					except:
 						value = ""
-				line = line.replace("//" + tag + "//", value,1)
+				line = line.replace("''" + tag + "''", value,1)
 			while find_between(line, "<<", "<<") != "":
 				#find first tag
 				tag = find_between(line, "<<", "<<")
