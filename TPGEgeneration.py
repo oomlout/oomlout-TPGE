@@ -46,7 +46,10 @@ def TPGEgeneratePages(idString, baseDirectory, xmlAdd, extraXML,template,output)
 	#print "Using Template:  " + templateFileName
 
 	outputFileName = output
-
+	path = os.path.dirname(outputFileName)
+	print "Path: " + path
+	if not os.path.exists(path):
+		os.makedirs(path)
 	outputFile = open(outputFileName, "w+")
 
 
