@@ -457,7 +457,9 @@ def TPGEcreateXML(idString, baseDirectory, xmlAdd, extraXML):
 
 
 def TPGEloadXML():
+	print "Loading XML"
 	tree = ET.parse(tempCombinedXMLFileName)
+	print "Done Loading XML"
 	return tree.getroot()
 
 

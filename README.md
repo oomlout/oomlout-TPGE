@@ -9,7 +9,8 @@ A command line python tool used for generating pages from template files, being 
 * -xa				-- xmlAddition extension for your xml files (default .xml)
 * -ex				-- extraXml list of directories or files to harvest xml data from
 * -rm				-- runMode for doing special things (A,ALL generate all)
-* -tm 			-- template name
+* -tm 				-- template name
+* -ui				-- unique ID name (make a page for each element in this)
 
 
 ## Tag Types
