@@ -121,7 +121,7 @@ def TPGEreplaceLine(idString, line, root, baseDirectory):
 					splitString  = line[line.find("^^"):line.rfind('""')]
 					line2 = splitString
 					line2 = line2.replace('^^' + tag + '^^',"")
-					print line2
+					#print line2
 					frontBit = line[0:line.find("^^")]
 					backBit = line[line.rfind('""')+2:len(line)]
 					#print "Front Bit: " + frontBit
