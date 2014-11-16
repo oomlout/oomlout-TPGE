@@ -3,7 +3,7 @@
 import sys, os
 import time
 
-from TPGEgeneration import TPGEloadXML
+from TPGEgeneration import *
 from TPGEgeneration import TPGEgeneratePages
 from TPGEgeneration import TPGEcreateXML
 from TPGExml import *
@@ -78,11 +78,13 @@ print runMode
 def TPGEgenerateAllPages(baseDirectory, xmlAdd, template, outputFile, extraXML):
 	print "Generating All OOMP Files:"
 	TPGEcreateXML("", baseDirectory, xmlAdd, extraXML)
-
+	TPGEcreateXML("", baseDirectory, xmlAdd, extraXML)
+	root2 = TPGEloadXML()
 	for x in os.walk(baseDirectory):
 		idString = str(x[0].replace(baseDirectory, ""))
 		print "  TPGE-Generating ---> " + idString
 		outputFile2 = outputFile.replace("%%ID%%", idString)
+		outputFile2 = TPGEreplaceLine(idString, outputFile2, root2, baseDirectory)
 		if idString <> "" :
 			TPGEgeneratePages(idString, baseDirectory + idString + "/", xmlAdd, baseDirectory, template, outputFile2)
 
@@ -97,6 +99,8 @@ def TPGEgenerateAllPagesUID(baseDirectory, xmlAdd, template, outputFile, extraXM
 		idString = TPGEgetValueIndex(x, root2, uID, end)
 		print "  TPGE-Generating ---> " + idString
 		outputFile2 = outputFile.replace("%%ID%%", idString)
+		#TPGEreplaceLine(idString, runLine, root, baseDirectory)
+		outputFile2 = TPGEreplaceLine(idString, outputFile2, root2, baseDirectory)
 		if idString <> "" :
 			TPGEgeneratePages(idString, baseDirectory + idString + "/", xmlAdd, baseDirectory, template, outputFile2)
 

@@ -58,7 +58,7 @@ def TPGEgeneratePages(idString, baseDirectory, xmlAdd, extraXML,template,output)
 
 	running = False
 	for line in templateFile.readlines():
-
+		
 
 		#test for multiline entry
 		if line.startswith("::::",0,4) or running == True:
