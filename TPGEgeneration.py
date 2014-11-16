@@ -3,8 +3,10 @@ from TPGExml import TPGEgetValue
 from TPGExml import TPGEgetValueWhere
 from TPGExml import TPGEgetValueIndex
 
+
 import sys
 import time
+from datetime import date,datetime
 from TPGExml import TPGEgetAllFilesIterate
 
 import xml.etree.ElementTree as ET
@@ -106,7 +108,14 @@ def TPGEreplaceLine(idString, line, root, baseDirectory):
 
 		#####REPLACE TAGS
 		#Replace all occurances of ID
+		####MAGIC WORDS
 		line = line.replace("%%ID%%", idString)
+		line = line.replace("%%YEAR%%", str(date.today().year).zfill(2))
+		line = line.replace("%%MONTH%%", str(date.today().month).zfill(2))
+		line = line.replace("%%DAY%%", str(date.today().day).zfill(2))
+		line = line.replace("%%HOUR%%", str(datetime.now().hour).zfill(2))
+		line = line.replace("%%MINUTE%%", str(datetime.now().minute).zfill(2))
+		
 
 		if line[:1] == "#":
 			#skip line
@@ -395,6 +404,17 @@ def TPGEreplaceLine(idString, line, root, baseDirectory):
 		##Add new line's
 
 		line = line.replace("~~", "\n")
+		
+				####MAGIC WORDS
+		line = line.replace("%%ID%%", idString)
+		line = line.replace("%%YEAR%%", str(date.today().year).zfill(2))
+		line = line.replace("%%MONTH%%", str(date.today().month).zfill(2))
+		line = line.replace("%%DAY%%", str(date.today().day).zfill(2))
+		line = line.replace("%%HOUR%%", str(datetime.now().hour).zfill(2))
+		line = line.replace("%%MINUTE%%", str(datetime.now().minute).zfill(2))
+
+		
+		
 		return line
 	else:
 		return ""
