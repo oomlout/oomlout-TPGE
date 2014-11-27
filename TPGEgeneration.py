@@ -191,7 +191,13 @@ def TPGEreplaceLine(idString, line, root, baseDirectory):
 				#TPGEgetValueWhere(id, tree, testField, resultField)
 				#TPGEgetValueWhere("BOLT-M3-M-12-01", root, "oompPart.oompID", "name")
 				#@@oompPart.oompID,name@@
-				#print "TAG:  " + tag
+				
+				#print "Details:  "
+				#print "  Tag:" +  tag
+				#print "  D1" + details[0]
+				#print "  D2" + details[1]
+				#print "  D3" + details[2]
+				
 				value = TPGEgetValueWhere(details[0], root, details[1], details[2])
 				#print "Replacing Tag " + tag + "   " + value[0:20]
 				line = line.replace("@@" + tag + "@@", value,1)
