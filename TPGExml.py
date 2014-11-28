@@ -68,7 +68,7 @@ def TPGEgetElementWhere(id, tree, testField):
 				value = ""
 	for item in value:
 		testValue = item.find(xmlLookup[len(xmlLookup)-1])
-		try: 
+		try:
 			if testValue.text == id:
 				#print "MATCH FOUND"
 				returnValue = item
@@ -114,7 +114,7 @@ def TPGEgetValueWhere(id, tree, testField, resultField):
 		result = TPGEgetElementWhere(id, tree, testField)
 		p = resultField.split(".")
 		#needs fixing for more than 3 elements
-
+		returnValue = ""
 
 		if len(p) == 3:
 			testField = p[0]

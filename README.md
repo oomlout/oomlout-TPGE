@@ -55,6 +55,7 @@ A command line python tool used for generating pages from template files, being 
 
 |Tag Marker			|	Description																			|	Example
 |-------------------|---------------------------------------------------------------------------------------|-------------------------------|
+| ¬¬				| NOT YET IMPLEMENTED  First line in file test to see if file is created, If there's a value between then create if nothing skip | ¬¬@@ID,tag to match,name of tag to return@@¬¬
 | $$ 				| Test for file existing if it does process line file between %%FILENAME%% referenced on base directory | $$%%ID%%.jpg	|
 | ** 				| Test if a tag value exists															|	\*\*ID,tag to match,name of tag to return\*\*(TEST value for  @@ above TODO-make a wrapper to use @@)
 | == 				| Test if a tag exists (index linked)													|	==1,oompPart.oompID,name== (TEST value for  !! above TODO-make a wrapper to use !!)

@@ -48,7 +48,7 @@ def TPGEgeneratePages(idString, baseDirectory, xmlAdd, extraXML,template,output)
 	#print "Using Template:  " + templateFileName
 
 	output = TPGEreplaceLine(idString, output, root, baseDirectory)
-	
+
 	outputFileName = output
 	path = os.path.dirname(outputFileName)
 	print "Path: " + path
@@ -62,7 +62,9 @@ def TPGEgeneratePages(idString, baseDirectory, xmlAdd, extraXML,template,output)
 
 	running = False
 	for line in templateFile.readlines():
-		
+
+
+
 
 		#test for multiline entry
 		if line.startswith("::::",0,4) or running == True:
@@ -117,7 +119,7 @@ def TPGEreplaceLine(idString, line, root, baseDirectory):
 		line = line.replace("%%DAY%%", str(date.today().day).zfill(2))
 		line = line.replace("%%HOUR%%", str(datetime.now().hour).zfill(2))
 		line = line.replace("%%MINUTE%%", str(datetime.now().minute).zfill(2))
-		
+
 
 		if line[:1] == "#":
 			#skip line
@@ -191,13 +193,13 @@ def TPGEreplaceLine(idString, line, root, baseDirectory):
 				#TPGEgetValueWhere(id, tree, testField, resultField)
 				#TPGEgetValueWhere("BOLT-M3-M-12-01", root, "oompPart.oompID", "name")
 				#@@oompPart.oompID,name@@
-				
+
 				#print "Details:  "
 				#print "  Tag:" +  tag
 				#print "  D1" + details[0]
 				#print "  D2" + details[1]
 				#print "  D3" + details[2]
-				
+
 				value = TPGEgetValueWhere(details[0], root, details[1], details[2])
 				#print "Replacing Tag " + tag + "   " + value[0:20]
 				line = line.replace("@@" + tag + "@@", value,1)
@@ -412,7 +414,7 @@ def TPGEreplaceLine(idString, line, root, baseDirectory):
 		##Add new line's
 
 		line = line.replace("~~", "\n")
-		
+
 				####MAGIC WORDS
 		line = line.replace("%%ID%%", idString)
 		line = line.replace("%%YEAR%%", str(date.today().year).zfill(2))
@@ -421,8 +423,8 @@ def TPGEreplaceLine(idString, line, root, baseDirectory):
 		line = line.replace("%%HOUR%%", str(datetime.now().hour).zfill(2))
 		line = line.replace("%%MINUTE%%", str(datetime.now().minute).zfill(2))
 
-		
-		
+
+
 		return line
 	else:
 		return ""
