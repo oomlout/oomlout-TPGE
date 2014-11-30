@@ -2,7 +2,7 @@ from TPGExml import TPGEgetValueExtra
 from TPGExml import TPGEgetValue
 from TPGExml import TPGEgetValueWhere
 from TPGExml import TPGEgetValueIndex
-
+from random import randint
 
 import sys
 import time
@@ -14,8 +14,10 @@ import os.path
 
 templateFileName = "template/PROJ-template.tmpl"
 
+
+
 tempPath = "tmp/"
-tempCombinedXMLFileName = tempPath+"tempCombinedXML.xml"
+tempCombinedXMLFileName = tempPath + str(randint(0,999999)) + "tempCombinedXML.xml"
 
 
 
@@ -92,8 +94,10 @@ def TPGEgeneratePages(idString, baseDirectory, xmlAdd, extraXML,template,output)
 			line = TPGEreplaceLine(idString, runLine, root, baseDirectory)
 			runLine = ""
 			if line <> "":
+				#print "----" + line + ">>>>>>"
 				outputFile.write(line)
 	outputFile.close()
+	
 
 
 
@@ -158,7 +162,7 @@ def TPGEreplaceLine(idString, line, root, baseDirectory):
 					line3 = line2.replace(details[2],str(b))
 					result = TPGEreplaceLine(idString,line3,root, baseDirectory)
 					#print result
-					if result <> "":
+					if result <> "" and result <> "\n":
 						line = line + result
 				line = frontBit + line + TPGEreplaceLine(idString,backBit,root, baseDirectory) #Re add front bit
 				#print ""
@@ -438,7 +442,9 @@ def TPGEreplaceLine(idString, line, root, baseDirectory):
 
 
 
-def TPGEcreateXMLList(list):
+def TPGEcreateXMLList(list, baseDirectory):
+
+	
 	xmlFiles = list
 
 	try:
@@ -486,7 +492,7 @@ def TPGEcreateXML(idString, baseDirectory, xmlAdd, extraXML):
 
 
 
-	TPGEcreateXMLList(moreXML)
+	TPGEcreateXMLList(moreXML, baseDirectory)
 
 
 def TPGEloadXML():

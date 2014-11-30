@@ -85,8 +85,25 @@ def TPGEgenerateAllPages(baseDirectory, xmlAdd, template, outputFile, extraXML):
 		print "  TPGE-Generating ---> " + idString
 		outputFile2 = outputFile.replace("%%ID%%", idString)
 		outputFile2 = TPGEreplaceLine(idString, outputFile2, root2, baseDirectory)
-		if idString <> "" :
+		
+		#remove any tags in the filename
+		outputFileTest=outputFile
+		#outputFileTest=outputFile.replace("%%ID%%", idString) #replace ID 
+		while find_between(outputFileTest, "@@", "@@") != "":
+			tag = find_between(outputFileTest, "@@", "@@")
+			outputFileTest = outputFileTest.replace("@@" + tag + "@@","") #replace tag with nothing to simulate receiving no replacement when TPGEreplacinglines
+			
+		print "---------------------------------------------"
+		print outputFileTest
+		print outputFile2
+		print "---------------------------------------------"
+		
+		if idString <> "" and not outputFile2 in outputFileTest:
 			TPGEgeneratePages(idString, baseDirectory + idString + "/", xmlAdd, baseDirectory, template, outputFile2)
+		else:
+			print "NOT CREATING FILE DUE TO BLANK FILENAME"
+			print "NOT CREATING FILE DUE TO BLANK FILENAME"
+			print "NOT CREATING FILE DUE TO BLANK FILENAME"
 
 def TPGEgenerateAllPagesUID(baseDirectory, xmlAdd, template, outputFile, extraXML):
 	print "Generating All Files UID:"
