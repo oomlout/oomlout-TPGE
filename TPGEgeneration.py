@@ -76,19 +76,22 @@ def TPGEgeneratePages(idString, baseDirectory, xmlAdd, extraXML,template,output)
 			running = True
 			if running:
 				if line.startswith(";;;;",0,4):
+					
 					line = TPGEreplaceLine(idString, runLine, root, baseDirectory)
 					runLine = ""
 					running = False
 					#print "   FINISHED MULTILINE"
+					line = line.replace("::::","")
+					line = line.replace(";;;;","")
+					line = line.rstrip()
+					line = line.lstrip()
+					line = line + "\n"
 					if line <> "":
-						line = line.replace("::::","")
-						line = line.replace(";;;;","")
-						line = line.rstrip()
-						line = line.lstrip()
-						line = line + "\n"
 						outputFile.write(line)
 				else:
 					#print "    Adding to line"
+					line = line.replace("\n","")
+					line = line.replace("\r","")
 					runLine = runLine + line
 		else:
 			#print "    RL" + line + "()"
@@ -231,6 +234,41 @@ def TPGEreplaceLine(idString, line, root, baseDirectory):
 					except:
 						value = ""
 				line = line.replace("''" + tag + "''", value,1)
+			while find_between(line, "()", "()") != "":
+				#find first tag
+				tag = find_between(line, "()", "()")
+				details = tag.split(",")
+				#print "TESTING FOR CREATION: " +  details[0] + "  " + details[1]
+				if details[0] != details[1]:
+					replaceValue = "%$%DELETE FILE%$%"
+				else:
+					replaceValue = ""
+				line = line.replace("()" + tag + "()", replaceValue,1)	
+				#print line
+			while find_between(line, "!)", "!)") != "":
+				#find first tag
+				tag = find_between(line, "!)", "!)")
+				details = tag.split(",")
+				details = tag.split(",")
+				details = tag.split(",")
+				#print "TESTING FOR CREATION: " +  details[0] + "  " + details[1]
+				if details[0] == details[1]:
+					replaceValue = "%$%DELETE FILE%$%"
+				else:
+					replaceValue = ""
+				line = line.replace("!)" + tag + "!)", replaceValue,1)	
+				#print line
+			while find_between(line, "(*", "(*") != "":
+				#find first tag
+				tag = find_between(line, "(*", "(*")
+				details = tag.split(",")
+				
+				if os.path.isfile(baseDirectory + details[0]):
+					replaceValue = details[1]
+				else:
+					replaceValue = details[2]
+				line = line.replace("(*" + tag + "(*", replaceValue,1)	
+				#print line				
 			while find_between(line, "<<", "<<") != "":
 				#find first tag
 				tag = find_between(line, "<<", "<<")
@@ -253,28 +291,7 @@ def TPGEreplaceLine(idString, line, root, baseDirectory):
 				if details[0] != details[1]:
 					replaceValue = details[2]
 				line = line.replace(">>" + tag + ">>", replaceValue,1)
-			while find_between(line, ",,", ",,") != "":
-				#find first tag
-				tag = find_between(line, ",,", ",,")
-				details = tag.split(",")
-				#print "TESTING FOR CREATION: " +  details[0] + "  " + details[1]
-				if details[0] != details[1]:
-					replaceValue = "%$%DELETE FILE%$%"
-				else:
-					replaceValue = ""
-				line = line.replace(",," + tag + ",,", replaceValue,1)	
-				#print line
-			while find_between(line, "!,", "!,") != "":
-				#find first tag
-				tag = find_between(line, "!,", "!,")
-				details = tag.split(",")
-				#print "TESTING FOR CREATION: " +  details[0] + "  " + details[1]
-				if details[0] == details[1]:
-					replaceValue = "%$%DELETE FILE%$%"
-				else:
-					replaceValue = ""
-				line = line.replace("!," + tag + "!,", replaceValue,1)	
-				#print line
+
 			
 	includeLine = True
 	##AFTER REPLACMENT TEST FOR INCLUSION

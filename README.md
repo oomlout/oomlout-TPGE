@@ -55,9 +55,10 @@ A command line python tool used for generating pages from template files, being 
 
 |Tag Marker			|	Description																			|	Example
 |-------------------|---------------------------------------------------------------------------------------|-------------------------------|
-| ,,				| First line in file test to see if file is created, If the value matches the second value then create | ,,@@ID,tag to match,name of tag to return@@,,
-| !,				| First line in file test to see if file is created, If the value matches the second value then create | !,@@ID,tag to match,name of tag to return@@!,
+| ()				| First line in file test to see if file is created, If the value matches the second value then create | ()@@ID,tag to match,name of tag to return@@()
+| !)				| First line in file test to see if file is created, If the value matches the second value then create | !)@@ID,tag to match,name of tag to return@@!)
 | $$ 				| Test for file existing if it does process line file between %%FILENAME%% referenced on base directory | $$%%ID%%.jpg	|
+| (*				| Test for file if it exists include first bit otherwise second bit						|	()FILE,INCLUDE,INCLUDE IF NOT EXISTING()		
 | ** 				| Test if a tag value exists															|	\*\*ID,tag to match,name of tag to return\*\*(TEST value for  @@ above TODO-make a wrapper to use @@)
 | == 				| Test if a tag exists (index linked)													|	==1,oompPart.oompID,name== (TEST value for  !! above TODO-make a wrapper to use !!)
 | ++ 				| Include if two values are the same (whole Line)										|	++CRHO,CRHO++ ++@@%%ID%%,oompPart.oompID,hexID@@,AEA++
