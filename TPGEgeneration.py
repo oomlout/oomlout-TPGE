@@ -35,7 +35,9 @@ def find_between( s, first, last ):
 # Main Routine
 def TPGEgeneratePages(idString, baseDirectory, xmlAdd, extraXML,template,output):
 	#print ("  TPGE -- Generating Pages")
-
+	
+	done = False
+	
 	root = TPGEloadXML()
 
 	#getting template name trying in ID directory
@@ -95,7 +97,18 @@ def TPGEgeneratePages(idString, baseDirectory, xmlAdd, extraXML,template,output)
 			runLine = ""
 			if line <> "":
 				#print "----" + line + ">>>>>>"
-				outputFile.write(line)
+				if "%$%DELETE FILE%$%" in line:
+					outputFile.close()
+					os.remove(outputFileName)
+					print "   +++++++++++++++++++++NOT CREATING FILE DUE TO TEST++++++++++++++++++++++++++++++"
+					done = True
+					break
+				else:
+					outputFile.write(line)
+			if done:
+				break
+		if done:
+			break
 	outputFile.close()
 	
 
@@ -240,6 +253,29 @@ def TPGEreplaceLine(idString, line, root, baseDirectory):
 				if details[0] != details[1]:
 					replaceValue = details[2]
 				line = line.replace(">>" + tag + ">>", replaceValue,1)
+			while find_between(line, ",,", ",,") != "":
+				#find first tag
+				tag = find_between(line, ",,", ",,")
+				details = tag.split(",")
+				#print "TESTING FOR CREATION: " +  details[0] + "  " + details[1]
+				if details[0] != details[1]:
+					replaceValue = "%$%DELETE FILE%$%"
+				else:
+					replaceValue = ""
+				line = line.replace(",," + tag + ",,", replaceValue,1)	
+				#print line
+			while find_between(line, "!,", "!,") != "":
+				#find first tag
+				tag = find_between(line, "!,", "!,")
+				details = tag.split(",")
+				#print "TESTING FOR CREATION: " +  details[0] + "  " + details[1]
+				if details[0] == details[1]:
+					replaceValue = "%$%DELETE FILE%$%"
+				else:
+					replaceValue = ""
+				line = line.replace("!," + tag + "!,", replaceValue,1)	
+				#print line
+			
 	includeLine = True
 	##AFTER REPLACMENT TEST FOR INCLUSION
 	if line[:1] == "#":
@@ -428,7 +464,8 @@ def TPGEreplaceLine(idString, line, root, baseDirectory):
 		line = line.replace("%%MINUTE%%", str(datetime.now().minute).zfill(2))
 
 
-
+		#print "BOTTOM  " + line
+		
 		return line
 	else:
 		return ""
