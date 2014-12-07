@@ -46,6 +46,7 @@ def TPGEgeneratePages(idString, baseDirectory, xmlAdd, extraXML,template,output)
 	try:
 		templateFile = open(templateFileName,"r")
 	except IOError:
+		print "Can't find template: " + templateFileName
 		templateFileName = "template/TEST-template.tmpl"
 		templateFile = open("template/TEST-template.tmpl","r")
 
@@ -180,6 +181,7 @@ def TPGEreplaceLine(idString, line, root, baseDirectory):
 					#print result
 					if result <> "" and result <> "\n":
 						line = line + result
+					includeLine = True
 				line = frontBit + line + TPGEreplaceLine(idString,backBit,root, baseDirectory) #Re add front bit
 				#print ""
 
@@ -279,6 +281,12 @@ def TPGEreplaceLine(idString, line, root, baseDirectory):
 				replaceValue = ""
 				if details[0] == details[1]:
 					replaceValue = details[2]
+				else:
+					try:
+						replaceValue = details[3]
+					except:
+						replaceValue = ""
+				
 				line = line.replace("<<" + tag + "<<", replaceValue,1)
 			while find_between(line, ">>", ">>") != "":
 				#find first tag
@@ -333,7 +341,7 @@ def TPGEreplaceLine(idString, line, root, baseDirectory):
 				#includeLine = True
 			else:
 				#print"      Skipping Line   TAG DOESN'T EXIST    " + line[0:20]
-				#print "Skipping Due To **"
+				#print "Skipping Due To **   " + tag
 				includeLine = False
 	elif line[:1] == "=":
 		#Test for tag existance
@@ -370,10 +378,11 @@ def TPGEreplaceLine(idString, line, root, baseDirectory):
 				#@@oompPart.oompID,name@@
 				#@@oompPart.oompID,name@@
 				#print "Testing Equal: " +details[0] + "  " + details[1]
+				
 				if details[0] != details[1]:
 					#print "      EXCLUDING"
 					includeLine=False
-					#print "Skipping Due To ++"
+					#print "Skipping Due To ++   " + tag
 				line = line.replace("++" + tag + "++", "")
 	elif find_between(line, "--", "--") != "":
 		while find_between(line, "--", "--") != "":

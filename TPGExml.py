@@ -59,13 +59,14 @@ def TPGEgetElementWhere(id, tree, testField):
 	xmlLookup = testField.split(".")
 	running = True
 	#print len(xmlLookup)
+	value = ""
 	for x in range(0,len(xmlLookup)-1):
-			try:
-				#try and find the text if not found try and go down one step
-				value = tree.findall(xmlLookup[x])
-			except AttributeError:
-				#print "     XML TAG NOT FOUND " + testField + "  --  " + xmlLookup[x]
-				value = ""
+		try:
+			#try and find the text if not found try and go down one step
+			value = tree.findall(xmlLookup[x])
+		except AttributeError:
+			#print "     XML TAG NOT FOUND " + testField + "  --  " + xmlLookup[x]
+			value = ""
 	for item in value:
 		testValue = item.find(xmlLookup[len(xmlLookup)-1])
 		try:
