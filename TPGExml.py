@@ -11,11 +11,14 @@ def TPGEgetValue(lookupString, tree):
 			value = tree.find(tag).text
 		except AttributeError:
 			value = ""
+		except KeyError:
+			value = ""
 		try:
 			tree = tree.find(tag)
 		except AttributeError:
 			value = ""
-
+		except KeyError:
+			value = ""
 	if value is None:
 		#print "    TAG NOT FOUND  " + lookupString
 		value = ""

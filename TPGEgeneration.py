@@ -4,6 +4,7 @@ from TPGExml import TPGEgetValueWhere
 from TPGExml import TPGEgetValueIndex
 from random import randint
 
+import codecs
 import sys
 import time
 from datetime import date,datetime
@@ -33,12 +34,12 @@ def find_between( s, first, last ):
 
 
 # Main Routine
-def TPGEgeneratePages(idString, baseDirectory, xmlAdd, extraXML,template,output):
+def TPGEgeneratePages(idString, baseDirectory, xmlAdd, extraXML,template,output, root):
 	#print ("  TPGE -- Generating Pages")
 	
 	done = False
 	
-	root = TPGEloadXML()
+	
 
 	#getting template name trying in ID directory
 	##Need to ad a for each
@@ -48,7 +49,7 @@ def TPGEgeneratePages(idString, baseDirectory, xmlAdd, extraXML,template,output)
 	except IOError:
 		print "Can't find template: " + templateFileName
 		templateFileName = "template/TEST-template.tmpl"
-		templateFile = open("template/TEST-template.tmpl","r")
+		templateFile = open("template/TEST-template.tmpl","r+")
 
 	#print "Using Template:  " + templateFileName
 
@@ -88,7 +89,7 @@ def TPGEgeneratePages(idString, baseDirectory, xmlAdd, extraXML,template,output)
 					line = line.lstrip()
 					line = line + "\n"
 					if line <> "":
-						outputFile.write(line)
+						outputFile.write(line.encode('utf8'))
 				else:
 					#print "    Adding to line"
 					line = line.replace("\n","")
@@ -108,7 +109,7 @@ def TPGEgeneratePages(idString, baseDirectory, xmlAdd, extraXML,template,output)
 					done = True
 					break
 				else:
-					outputFile.write(line)
+					outputFile.write(line.encode('utf8'))
 			if done:
 				break
 		if done:
@@ -172,17 +173,21 @@ def TPGEreplaceLine(idString, line, root, baseDirectory):
 					#print "RESULTING STRING " + line2
 					#sys.stdout.write('.')
 				line = ""   #reset line to nil
-				for b in range(int(details[0]),int(details[1])+1):
-					#print b
-					#sys.stdout.write('.')
-					#print "Looping: " + str(b)
-					line3 = line2.replace(details[2],str(b))
-					result = TPGEreplaceLine(idString,line3,root, baseDirectory)
-					#print result
-					if result <> "" and result <> "\n":
-						line = line + result
-					includeLine = True
+				try:
+					for b in range(int(details[0]),int(details[1])+1):
+						#print b
+						#sys.stdout.write('.')
+						#print "Looping: " + str(b)
+						line3 = line2.replace(details[2],str(b))
+						result = TPGEreplaceLine(idString,line3,root, baseDirectory)
+						#print result
+						if result <> "" and result <> "\n":
+							line = line + result
+						includeLine = True
+				except:
+					print "Problem with line: " + line2
 				line = frontBit + line + TPGEreplaceLine(idString,backBit,root, baseDirectory) #Re add front bit
+				
 				#print ""
 
 			####### COMPLEX TAGS WITH INDEX
@@ -515,8 +520,8 @@ def TPGEcreateXMLList(list, baseDirectory):
 	except:
 		os.mkdir(tempPath)
 
-	f = open(tempCombinedXMLFileName,'w+')
-	f.write("<xml>")
+	f = codecs.open(tempCombinedXMLFileName,'w+', encoding='utf-8')
+	f.write("<xml>".encode('utf-8'))
 
 	print "---------"
 	for item in xmlFiles:
@@ -526,10 +531,11 @@ def TPGEcreateXMLList(list, baseDirectory):
 					t = 0
 			#		sys.stdout.write("S")
 				else:
-					f.write(line)
+					value = unicode(line, 'utf-8')
+					f.write(value)
 			#		sys.stdout.write(".")
 			#print ""
-	f.write("</xml>")
+	f.write("</xml>".encode('utf-8'))
 	f.close()
 
 def TPGEcreateXML(idString, baseDirectory, xmlAdd, extraXML):

@@ -80,6 +80,7 @@ def TPGEgenerateAllPages(baseDirectory, xmlAdd, template, outputFile, extraXML):
 	TPGEcreateXML("", baseDirectory, xmlAdd, extraXML)
 	TPGEcreateXML("", baseDirectory, xmlAdd, extraXML)
 	root2 = TPGEloadXML()
+	root = TPGEloadXML()
 	for x in os.walk(baseDirectory):
 		idString = str(x[0].replace(baseDirectory, ""))
 		print "  TPGE-Generating ---> " + idString
@@ -99,7 +100,8 @@ def TPGEgenerateAllPages(baseDirectory, xmlAdd, template, outputFile, extraXML):
 		print "---------------------------------------------"
 		
 		if idString <> "" and not outputFile2 in outputFileTest:
-			TPGEgeneratePages(idString, baseDirectory + idString + "/", xmlAdd, baseDirectory, template, outputFile2)
+			
+			TPGEgeneratePages(idString, baseDirectory + idString + "/", xmlAdd, baseDirectory, template, outputFile2, root)
 		else:
 			print "NOT CREATING FILE DUE TO BLANK FILENAME"
 			print "NOT CREATING FILE DUE TO BLANK FILENAME"
@@ -109,6 +111,7 @@ def TPGEgenerateAllPagesUID(baseDirectory, xmlAdd, template, outputFile, extraXM
 	print "Generating All Files UID:"
 	TPGEcreateXML("", baseDirectory, xmlAdd, extraXML)
 	root2 = TPGEloadXML()
+	root = TPGEloadXML()
 	for x in range(0,10000):
 		#TPGEgetValueIndex(index, tree, testField, resultField):
 		print "  Starting" 
@@ -119,7 +122,7 @@ def TPGEgenerateAllPagesUID(baseDirectory, xmlAdd, template, outputFile, extraXM
 		#TPGEreplaceLine(idString, runLine, root, baseDirectory)
 		outputFile2 = TPGEreplaceLine(idString, outputFile2, root2, baseDirectory)
 		if idString <> "" :
-			TPGEgeneratePages(idString, baseDirectory + idString + "/", xmlAdd, baseDirectory, template, outputFile2)
+			TPGEgeneratePages(idString, baseDirectory + idString + "/", xmlAdd, baseDirectory, template, outputFile2,root)
 
 			
 
@@ -130,4 +133,5 @@ elif uID <> "":
 else:
 	print ("Generating Pages: idString = " + idString + "  baseDirectory = " + baseDirectory + "  Template: " + template)
 	TPGEcreateXML(idString, baseDirectory, xmlAdd, extraXML)
-	TPGEgeneratePages(idString, baseDirectory, xmlAdd, extraXML, template, outputFile)
+	root = TPGEloadXML()
+	TPGEgeneratePages(idString, baseDirectory, xmlAdd, extraXML, template, outputFile, root)
