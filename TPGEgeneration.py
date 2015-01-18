@@ -531,7 +531,7 @@ def TPGEcreateXMLList(list, baseDirectory):
 					t = 0
 			#		sys.stdout.write("S")
 				else:
-					value = unicode(line, 'utf-8')
+					value = unicode(line, 'utf-8', errors='ignore')
 					f.write(value)
 			#		sys.stdout.write(".")
 			#print ""
