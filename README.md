@@ -28,7 +28,8 @@ A command line python tool used for generating pages from template files, being 
 | ^^ ("" end bracket)|	Process the following line for a range 0 to 12 replacing %%U%% with the variable	|	^^0,12,%%U%%^^CONTENT TO PROCESS""  (loop from 0 to 12, replacing the tag %%U%% in the current line, can be used recursively but some care is needed. Everything to the right of this loop tag is processed with it) ("" used to bracket effective area so to allow adding things at the end rather than every cycle)
 
 ### Magic Words
-|Word			|	| Description																			|	Example
+
+|Word				| Description																			|	Example
 |-------------------|---------------------------------------------------------------------------------------|-------------------------------|
 | %%ID%%			|	Page ID sent from command line														|	BREB-01
 | %%YEAR%%			|	Current Year														|	2014
