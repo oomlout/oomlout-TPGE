@@ -117,6 +117,10 @@ def TPGEgenerateAllPagesUID(baseDirectory, xmlAdd, template, outputFile, extraXM
 		print "  Starting" 
 		end = uID.split(".")[1]
 		idString = TPGEgetValueIndex(x, root2, uID, end)
+
+			
+		
+
 		print "  TPGE-Generating ---> " + idString
 		outputFile2 = outputFile.replace("%%ID%%", idString)
 		#TPGEreplaceLine(idString, runLine, root, baseDirectory)

@@ -174,8 +174,11 @@ def TPGEgetElementIndex(index, tree, testField):
 			returnValue = value[int(index)]
 		except IndexError:
 			returnValue = ""
+		except ValueError:
+			print "     XML TAG NOT FOUND ValueError " + testField + "  --  " + xmlLookup[x]
+			returnValue = ""
 
-
+			
 	return returnValue
 
 ##
