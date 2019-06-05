@@ -36,7 +36,8 @@ A command line python tool used for generating pages from template files, being 
 | %%MONTH%%			|	Current Month														|	08
 | %%DAY%%			|	Current Day														|	05
 | %%HOUR%%			|	Current Hour														|	09
-| %%MINUTE%			|	Current Minute														|	45
+| %%MINUTE%%		|	Current Minute														|	45
+| %%CRLF%%			|	New line
  
 
 

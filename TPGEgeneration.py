@@ -141,6 +141,7 @@ def TPGEreplaceLine(idString, line, root, baseDirectory):
 		line = line.replace("%%DAY%%", str(date.today().day).zfill(2))
 		line = line.replace("%%HOUR%%", str(datetime.now().hour).zfill(2))
 		line = line.replace("%%MINUTE%%", str(datetime.now().minute).zfill(2))
+		
 
 
 		if line[:1] == "#":
@@ -493,7 +494,7 @@ def TPGEreplaceLine(idString, line, root, baseDirectory):
 		line = line.replace("%%DAY%%", str(date.today().day).zfill(2))
 		line = line.replace("%%HOUR%%", str(datetime.now().hour).zfill(2))
 		line = line.replace("%%MINUTE%%", str(datetime.now().minute).zfill(2))
-
+		line = line.replace("%%CRLF%%", "\n")
 
 		#print "BOTTOM  " + line
 		
